@@ -77,7 +77,7 @@ repetition_penalty = 1.0
 
 def generateText( messages):   
     #messages="Hoàng Sa, Trường Sa là của nước nào?"
-
+    print("begin generate text")
     # Tokenize the messages string
     input_ids = tok(messages, return_tensors="pt").input_ids
     input_ids = input_ids.to(m.device)

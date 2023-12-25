@@ -1,4 +1,7 @@
 import py_vncorenlp, os, sys
+import shlex
+
+sys.argv= sys.argv+ shlex.split( " --skip-torch-cuda-test --no-half")
 
 def getCurrentUserName():
     uname= os.environ.get('USERNAME')
@@ -44,21 +47,25 @@ os.makedirs(model_path, exist_ok=True)
 # model = AutoModelForCausalLM.from_pretrained(model_path, config=config,                                             
 #    
 #                                              torch_dtype=torch.float16, trust_remote_code=True)
-
+import datetime
+print("1")
+print(datetime.datetime.now())
 config = AutoConfig.from_pretrained(model_path, trust_remote_code=True)  
 config.init_device = "cpu"
-model = AutoModelForCausalLM.from_pretrained(model_path, config=config,torch_dtype=torch.float16, trust_remote_code=True)
+model = AutoModelForCausalLM.from_pretrained(model_path, config=config,torch_dtype=torch.bfloat16, trust_remote_code=True)
 
 model.eval()  
   
 tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)  
+print("2")
+print(datetime.datetime.now())
 
+PROMPT_TEMPLATE = "### Câu hỏi:\n{instruction}\n\n### Trả lời:"  
 #tokenizer.bos_token_id = 1
 
 def generateText(msg):
-    
-    PROMPT_TEMPLATE = "### Câu hỏi:\n{instruction}\n\n### Trả lời:"  
-
+    print("begin generate text")
+    print(datetime.datetime.now())
     # Some instruction examples
     # instruction = "Viết bài văn nghị luận xã hội về {topic}"
     # instruction = "Viết bản mô tả công việc cho vị trí {job_title}"
@@ -90,8 +97,10 @@ def generateText(msg):
     
     response = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0]  
     response = response.split("### Trả lời:")[1]
+    print("3")
+    print(datetime.datetime.now())
 
-generateText("Hoàng Sa, Trường Sa là của nước nào?")
+generateText("Viết bài văn nghị luận xã hội về an toàn giao thông")
 
 # import py_vncorenlp, os, sys
 

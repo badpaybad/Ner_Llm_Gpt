@@ -33,7 +33,7 @@ more usage: https://github.com/badpaybad/llama.cpp.docker
 # phoGPT
 
 
-                    git clone https://huggingface.co/vinai/PhoGPT-7
+                    git clone https://huggingface.co/vinai/PhoGPT-7B5-Instruct
                     git clone https://oauth:hf_...yourtoken....@huggingface.co/vinai/PhoGPT-7B5-Instruct/               
 
 
