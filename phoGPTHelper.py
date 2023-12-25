@@ -42,10 +42,10 @@ os.makedirs(model_path, exist_ok=True)
 # ## )
 # # If your GPU does not support bfloat16:
 # model = AutoModelForCausalLM.from_pretrained(model_path, config=config,                                             
-#     load_in_4bit=False,
+#    
 #                                              torch_dtype=torch.float16, trust_remote_code=True)
 
-config = AutoConfig.from_pretrained(model_path, trust_remote_code=True,learned_pos_emb=False)  
+config = AutoConfig.from_pretrained(model_path, trust_remote_code=True)  
 config.init_device = "cpu"
 model = AutoModelForCausalLM.from_pretrained(model_path, config=config,torch_dtype=torch.float16, trust_remote_code=True)
 
@@ -54,41 +54,44 @@ model.eval()
 tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)  
 
 #tokenizer.bos_token_id = 1
-  
-PROMPT_TEMPLATE = "### Câu hỏi:\n{instruction}\n\n### Trả lời:"  
 
-# Some instruction examples
-# instruction = "Viết bài văn nghị luận xã hội về {topic}"
-# instruction = "Viết bản mô tả công việc cho vị trí {job_title}"
-# instruction = "Sửa lỗi chính tả:\n{sentence_or_paragraph}"
-# instruction = "Dựa vào văn bản sau đây:\n{text}\nHãy trả lời câu hỏi: {question}"
-# instruction = "Tóm tắt văn bản:\n{text}"
+def generateText(msg):
+    
+    PROMPT_TEMPLATE = "### Câu hỏi:\n{instruction}\n\n### Trả lời:"  
+
+    # Some instruction examples
+    # instruction = "Viết bài văn nghị luận xã hội về {topic}"
+    # instruction = "Viết bản mô tả công việc cho vị trí {job_title}"
+    # instruction = "Sửa lỗi chính tả:\n{sentence_or_paragraph}"
+    # instruction = "Dựa vào văn bản sau đây:\n{text}\nHãy trả lời câu hỏi: {question}"
+    # instruction = "Tóm tắt văn bản:\n{text}"
 
 
-instruction = "Hoàng Sa, Trường Sa là của nước nào?"
-# instruction = "Sửa lỗi chính tả:\nTriệt phá băng nhóm kướp ô tô, sử dụng \"vũ khí nóng\""
+    #instruction = "Hoàng Sa, Trường Sa là của nước nào?"
+    # instruction = "Sửa lỗi chính tả:\nTriệt phá băng nhóm kướp ô tô, sử dụng \"vũ khí nóng\""
 
-input_prompt = PROMPT_TEMPLATE.format_map(  
-    {"instruction": instruction}  
-)  
-  
-input_ids = tokenizer(input_prompt, return_tensors="pt")  
-  
-outputs = model.generate(  
-    inputs=input_ids["input_ids"].to(config.init_device),  
-    attention_mask=input_ids["attention_mask"].to(config.init_device),  
-    do_sample=True,  
-    temperature=1.0,  
-    top_k=50,  
-    top_p=0.9,  
-    max_new_tokens=1024,  
-    eos_token_id=tokenizer.eos_token_id,  
-    pad_token_id=tokenizer.pad_token_id  
-)  
-  
-response = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0]  
-response = response.split("### Trả lời:")[1]
+    input_prompt = PROMPT_TEMPLATE.format_map(  
+        {"instruction": msg}  
+    )  
+    
+    input_ids = tokenizer(input_prompt, return_tensors="pt")  
+    
+    outputs = model.generate(  
+        inputs=input_ids["input_ids"].to(config.init_device),  
+        attention_mask=input_ids["attention_mask"].to(config.init_device),  
+        do_sample=True,  
+        temperature=1.0,  
+        top_k=50,  
+        top_p=0.9,  
+        max_new_tokens=1024,  
+        eos_token_id=tokenizer.eos_token_id,  
+        pad_token_id=tokenizer.pad_token_id  
+    )  
+    
+    response = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0]  
+    response = response.split("### Trả lời:")[1]
 
+generateText("Hoàng Sa, Trường Sa là của nước nào?")
 
 # import py_vncorenlp, os, sys
 
