@@ -39,8 +39,8 @@ m = AutoModelForCausalLM.from_pretrained(
     model_name,
     load_in_4bit=False,
     torch_dtype=torch.bfloat16,
-    device_map={"": 0} # will take 5 minue to get response 
-    #device_map="cpu"  #will take about 2hour to get response
+    #device_map={"": 0} # will take 5 minue to get response 
+    device_map="cpu"  #will take about 2hour to get response
 )
 
 tok = AutoTokenizer.from_pretrained(model_name)

@@ -3,6 +3,7 @@
 
 # llamma.cpp dockerfile
 
+more usage: https://github.com/badpaybad/llama.cpp.docker 
 
                     # if manual download just uncomment this , and comment curl
                     COPY llava-v1.5-7b-q4-server.llamafile /app/llava-v1.5-7b-q4-server.llamafile
