@@ -7,10 +7,10 @@ def getCurrentUserName():
         
     return uname
 
-workingDir = f"/home/{getCurrentUserName()}/newrobot/ROBOT/src/facerecognition/src"
+workingDir = f"/home/{getCurrentUserName()}/llmmodel"
 
 if getCurrentUserName()=="dunp":
-    workingDir = "/work/nuc-newrobot/ROBOT/src/facerecognition/src"
+    workingDir = "/work/llmmodel"
 
 print("api mldlai working dir: " + workingDir)
 
@@ -106,11 +106,6 @@ response = response.split("### Trả lời:")[1]
 #         uname= os.environ.get('USER')
         
 #     return uname
-
-# workingDir = f"/home/{getCurrentUserName()}/newrobot/ROBOT/src/facerecognition/src"
-
-# if getCurrentUserName()=="dunp":
-#     workingDir = "/work/nuc-newrobot/ROBOT/src/facerecognition/src"
 
 # print("api mldlai working dir: " + workingDir)
 
