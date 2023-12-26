@@ -31,7 +31,7 @@ def train():
     # get names of other pipes to disable them during training
     other_pipes = [pipe for pipe in nlp.pipe_names if pipe != "ner"]
     with nlp.disable_pipes(*other_pipes):  # only train NER
-        for itn in range(100):
+        for itn in range(20):
             random.shuffle(TRAIN_DATA)
             losses = {}
             for text, annotations in TRAIN_DATA:
@@ -70,7 +70,7 @@ def test():
     print(unique_labels)
     
     # test the trained model
-    test_text = 'bo ban Lam ten la Phạm Đô? dien thoai: 0778384839'
+    test_text = 'bo ban Lam ten la Phạm Đô? dien thoai: 0122212345'
     docf = nlp(test_text)
     print("Entities in '%s'" % test_text)
     for ent in docf.ents:
