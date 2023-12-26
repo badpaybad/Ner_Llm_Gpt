@@ -2,11 +2,11 @@ import argparse
 # Create the argument parser
 parser = argparse.ArgumentParser()
 
-# Add arguments
-parser.add_argument('-n', '--model_name', type=str, help='Specify a model name', default='vilm/vietcuna-3b', choices=['vilm/vietcuna-3b', 'vilm/vietcuna-7b'])
-parser.add_argument('--four-bit', action='store_true', help='Whether to use 4bit')
+## Add arguments
+# parser.add_argument('-n', '--model_name', type=str, help='Specify a model name', default='vilm/vietcuna-3b', choices=['vilm/vietcuna-3b', 'vilm/vietcuna-7b'])
+# parser.add_argument('--four-bit', action='store_true', help='Whether to use 4bit')
 
-args = parser.parse_args()
+# args = parser.parse_args()
 
 import torch
 from peft import PeftModel
@@ -34,13 +34,14 @@ print(f"Starting to load the model {model_name} into memory")
 
 # model_nf4 = AutoModelForCausalLM.from_pretrained(model_id, quantization_config=nf4_config)
 
-print(args)
 m = AutoModelForCausalLM.from_pretrained(
     model_name,
     load_in_4bit=False,
     torch_dtype=torch.bfloat16,
     #device_map={"": 0} # will take 5 minue to get response 
     device_map="cpu"  #will take about 2hour to get response
+    #device_map="auto", 
+    #offload_folder="offload",
 )
 
 tok = AutoTokenizer.from_pretrained(model_name)
@@ -59,8 +60,6 @@ import gradio as gr
 import requests
 
 max_new_tokens = 512 if model_name == 'vilm/vietcuna-3b' else 1024
-start_message = """Below is an instruction that describes a task.
-Write a response that appropriately completes the request.\n\n"""
 
 class StopOnTokens(StoppingCriteria):
     def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor, **kwargs) -> bool:
@@ -74,8 +73,10 @@ temperature=0.7
 top_p=0.9
 top_k=0
 repetition_penalty = 1.0
-
+import datetime
 def generateText( messages):   
+    
+    print(f"begin {datetime.datetime.now()}")
     #messages="Hoàng Sa, Trường Sa là của nước nào?"
     print("begin generate text")
     # Tokenize the messages string
@@ -101,10 +102,43 @@ def generateText( messages):
     for new_text in streamer:
         partial_text += new_text
 
+    print(f"done {datetime.datetime.now()}")
     print(partial_text)
     return partial_text
 
-generateText("Hoàng Sa, Trường Sa là của nước nào?")
+msg="""
+you are an expertise in NLP. I give you a scipts conversation between agent that selling insurrance package and client,  They need to conffirm that they understand eache other. you need to parse the infomation inside the conversation i want in json format and in vietnamese totally:  
+
+{"Tên Tư vấn viên":,
+"Mã số Đại lý":,
+"Sản phẩm bảo hiểm":
+"Mức phí đóng hàng năm":,
+"Thời hạn đóng phí":,
+"Thời hạn hợp đồng":,
+"Tên khách hàng":,
+"Số điện thoại":,
+"địa chỉ khách hàng:"}
+Here is the scripts:
+
+	AGENT: Tôi tên Nguyễn Văn A, Mã số đại lý 60000012
+	AGENT: Hôm nay tôi thực hiện ghi âm nội dung tư vấn theo yêu cầu của Luật kinh doanh bảo hiểm. Mọi thông tin của cuộc ghi âm sẽ được bảo mật tuân thủ theo Luật bảo mật thông tin  
+	AGENT: Hôm nay tôi có tư vấn cho chị Nguyen Thi B về sản phẩm bảo hiểm liên kết đơn vị PRU đầu tư linh hoạt, với mức phí đóng hàng năm là 14,353,353 ngàn
+	AGENT: Thời hạn đóng phí 15 năm, thời hạn hợp đồng 20 năm
+	AGENT: Với sản phẩm tham gia này, khách hàng sẽ được các quyền lợi như sau:
+	AGENT:  Quyền thay đổi lựa chọn quyền lợi bảo hiểm
+	AGENT: 	Quyền lợi thưởng, duy trì hợp đồng
+	AGENT: Quyền lợi đáo hạn
+	AGENT:  	Quyền lợi điều chỉnh hợp đồng trong 21 ngày cân nhắc
+	AGENT:  Quyền lợi thay đổi, chọn quỹ đầu tư trong danh sách quỹ liên kết của công ty
+AGENT: 	Giá trị quỹ của hợp đồng không được đảm bảo và có thể nhỏ hơn hoặc bằng 0 do phí bảo hiểm không đủ để khấu trừ bảo hiểm rủi rỏ và phí quản lý hợp đồng hoặc do tình hình đầu tư của quỹ. Trong vòng 5 năm hợp đồng đầu tiên, hợp đồng sẽ được duy trì hiệu lực với điều kiện bên mua bảo hiểm đóng đầy đủ phí và đúng hạn phí bản hiểm cơ bản của 5 năm hợp đồng đầu tiên và không thực hiện quyền rút tiền từ Giá trị tài khoản cơ bản
+	AGENT:  Bên cạnh đó, tôi xin được lưu ý cho khách hàng răng mọi thông tin khách hàng cung cấp không chính xác sẽ có thể ảnh hưởng đến quyền lợi của khách hàng trong tương lai.
+	Customer: 	Tôi tên Nguyễn Thị B, ở địa chỉ 216/9 Hoàng Hoa Thám, Thị Trấn Long Hải, Thành Phố Vũng Tàu, số điện thoại của tôi là 091231020
+	Customer: Tôi xác nhận đã được tư vấn viên Nguyễn Văn A tư vấn đầy đủ, và giải thích các điều khoản của hợp đồng. Tôi xác nhận sản phẩm bảo hiểm được tư vấn là phù hợp với nhu cầu tài chính của tôi
+"""
+
+generateText(msg)
+
+#generateText("Hoàng Sa, Trường Sa là của nước nào?")
 
 """
 Đây là câu hỏi được đặt ra trong một buổi thảo luận về chủ quyền lãnh thổ Việt Nam trên Biển Đông do Báo VietNamNet tổ chức chiều qua tại Hà Nội.
