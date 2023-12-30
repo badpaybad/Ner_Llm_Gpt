@@ -1,0 +1,4 @@
+namespace cloud
+{
+    void test();
+}
