@@ -23,6 +23,8 @@ print("x_train shape:", x_train.shape)
 print("y_train shape:", y_train.shape)
 print(x_train.shape[0], "train samples")
 print(x_test.shape[0], "test samples")
+print("x_train[0]")
+print(x_train[0].shape)
 
 # Model parameters
 num_classes = 10
