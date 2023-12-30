@@ -5,16 +5,17 @@ project(
   VERSION 1.0
   LANGUAGES CXX)
 
+set(Tensorflow_IncludeDir "")
+
 add_executable(testtryfinally "main.cpp")
 
 include_directories("libs")
 file(GLOB source_libs "libs/*.h" "libs/*.cpp")
-
 file(GLOB source_libs_cloud "libs/cloud/*.h" "libs/cloud/*.cpp")
-add_library(sharedlibs SHARED ${source_libs} ${source_libs_cloud})
+file(GLOB source_libs_tensorflow "libs/tensorflow/*.h" "libs/tensorflow/*.cpp")
+add_library(sharedlibs SHARED ${source_libs} ${source_libs_cloud} ${source_libs_tensorflow})
 
-target_link_libraries(testtryfinally PRIVATE sharedlibs)
-
+target_link_libraries(testtryfinally PRIVATE sharedlibs tensorflow)
 
 file(GLOB HEADER_FILES_libs "libs/*.h")
 file(GLOB HEADER_FILES_libs_cloud "libs/cloud/*.h")

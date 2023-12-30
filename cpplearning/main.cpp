@@ -1,15 +1,28 @@
 #include <iostream>
 #include <memory>
 #include <thread>
+#include <fstream>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
+#include <stdio.h>
+#include <tensorflow/c/c_api.h>
+
+#include "libs/cloud/aws.h"
 #include "libs/test.h"
 
+int main()
+{
+    printf("Hello from TensorFlow C library version %s\n", TF_Version());
+    return 0;
+}
 void testTryFinally()
 {
     try
     {
         auto a = 0;
         auto b = 1;
-        auto c = b / b;
+        auto c = b / a;
         return;
     }
     catch (const std::exception &ex)
@@ -22,15 +35,7 @@ void testTryFinally()
         std::cout << "\nwork like finally\n";
     }
 }
-
-#include <fstream>
-#include <nlohmann/json.hpp>
-
-using json = nlohmann::json;
-
-#include "libs/cloud/aws.h"
-
-int main()
+void test2()
 {
     TestClass cls1("cls1");
     cls1.funcPublic();
@@ -74,28 +79,30 @@ int main()
     {
     }
 }
+void test1()
+{
+    std::cout << "Begin\n";
 
-//     std::cout << "Begin\n";
+    TestClass cls1("cls1");
+    cls1.funcPublic();
 
-//     TestClass cls1("cls1");
-//     cls1.funcPublic();
+    TestClass *cls2 = &cls1;
+    cls2->funcPublic();
 
-//     TestClass *cls2 = &cls1;
-//     cls2->funcPublic();
+    cls2->Name = "cls2";
 
-//     cls2->Name = "cls2";
+    std::shared_ptr<TestClass> cls3 = std::make_shared<TestClass>(*cls2);
+    std::shared_ptr<TestClass> cls4 = std::make_shared<TestClass>(cls1);
 
-//     std::shared_ptr<TestClass> cls3 = std::make_shared<TestClass>(*cls2);
-//     std::shared_ptr<TestClass> cls4 = std::make_shared<TestClass>(cls1);
+    //  cls4->Name = "cls4";
+    cls4->funcPublic();
 
-//   //  cls4->Name = "cls4";
-//     cls4->funcPublic();
+    cls3->Name = "cls3";
+    cls3->funcPublic();
 
-//     cls3->Name = "cls3";
-//     cls3->funcPublic();
+    cls1.funcPublic();
+    cls2->funcPublic();
+    testTryFinally();
 
-//     cls1.funcPublic();
-//     cls2->funcPublic();
-//     testTryFinally();
-
-//     std::cout << "End\n";
+    std::cout << "End\n";
+}
