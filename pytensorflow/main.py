@@ -30,7 +30,16 @@ loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 model.compile(optimizer='adam',
               loss=loss_fn,
               metrics=['accuracy'])
-model.fit(input_tf, tf.constant([0,1]), epochs=5)
+
+
+from keras.callbacks import TensorBoard
+
+history = model.fit(input_tf, tf.constant([0,1]), epochs=5
+                    ,callbacks=[
+                        TensorBoard(log_dir='logs', histogram_freq=1)
+                    ]
+                    )
+# to show log tensorboard --logdir=logs
 
 # print("model(input_tf)")
 # print(model(input_tf))

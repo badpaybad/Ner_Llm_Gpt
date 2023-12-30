@@ -8,6 +8,7 @@ import os
 # package is imported.
 import keras
 
+from keras.callbacks import TensorBoard
 
 # Load the data and split it between train and test sets
 (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
@@ -60,8 +61,9 @@ if os.path.isfile(modelName)== False:
     callbacks = [
         keras.callbacks.ModelCheckpoint(filepath="model_at_epoch_{epoch}.keras"),
         keras.callbacks.EarlyStopping(monitor="val_loss", patience=2),
+        TensorBoard(log_dir='logsmnist', histogram_freq=1)
     ]
-
+    #tensorboard --logdir=logsmnist
     model.fit(
         x_train,
         y_train,
