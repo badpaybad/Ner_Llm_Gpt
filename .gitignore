@@ -169,3 +169,4 @@ test_ho_ten/vocab/lookups.bin
 test_ho_ten/vocab/strings.json
 test_ho_ten/vocab/vectors
 test_ho_ten/vocab/vectors.cfg
+**/**.keras
