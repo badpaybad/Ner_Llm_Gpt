@@ -13,8 +13,8 @@ print(tf.reshape(arr1,(-1,1,10)))
 
 model = tf.keras.models.Sequential()
 model.add(tf.keras.layers.Input(shape=(1, 10)))
-#model.add(tf.keras.layers.Flatten())
-model.add(layers.Conv1D(3, 1, activation="relu"))
+model.add(tf.keras.layers.Flatten())
+model.add(layers.Conv1D(3, 3 ,activation="relu"))
 
 print("--->>> model(tf.reshape(arr1,(-1,1,10)))")
 print(model(tf.reshape(arr1,(-1,1,10))))
