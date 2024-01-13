@@ -26,7 +26,7 @@ def subArray(arr, fromIdx, toIdx):
     return arr[fromIdx:toIdx]
 
 
-def findNextEdgeIndex(arr, fromEdgeIdx, fromEdgeVal):
+def findEndEdgeIndex(arr, fromEdgeIdx, fromEdgeVal):
     j = fromEdgeIdx+1
     length = len(arr)
     subarr = subArray(arr, j, length)
@@ -57,7 +57,7 @@ def findHoles(arr):
             idx = idx+1
             continue
         beginIdxEdge = idx
-        (endIdxEdge, subarr) = findNextEdgeIndex(arr, idx, val)
+        (endIdxEdge, subarr) = findEndEdgeIndex(arr, idx, val)
         if endIdxEdge == j:
             break
         idx = endIdxEdge
