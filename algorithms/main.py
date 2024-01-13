@@ -9,6 +9,19 @@ def findMax(arr):
     return (tempidx, temp)
 
 
+def calHoleValue(arrHole):
+    a = arrHole[0]
+    b = arrHole[len(arrHole)-1]
+    if a > b:
+        a = b
+    d = 0
+    for c in arrHole:
+        val = a-c
+        if val > 0:
+            d = d+val
+    return d
+
+
 def subArray(arr, fromIdx, toIdx):
     return arr[fromIdx:toIdx]
 
@@ -43,29 +56,17 @@ def findHoles(arr):
         if val <= arr[j]:
             idx = idx+1
             continue
-        a = idx
-        (b, subarr) = findNextEdgeIndex(arr, idx, val)
-        if b == j:
+        beginIdxEdge = idx
+        (endIdxEdge, subarr) = findNextEdgeIndex(arr, idx, val)
+        if endIdxEdge == j:
             break
-        idx = b
-        b=b+1
-        hole = subArray(arr, a, b)
-        # print(f"hole: {hole} b: {b}")        
-        holes.append((hole, a, b))
+        idx = endIdxEdge
+        endIdxEdge = endIdxEdge+1
+        hole = subArray(arr, beginIdxEdge, endIdxEdge)
+        # print(f"hole: {hole} b: {b}")
+        # can call : calHoleValue (hole) to get value, or may want to queue to other thread to call : calHoleValue
+        holes.append((hole, beginIdxEdge, endIdxEdge))
     return holes
-
-
-def calHoleValue(arrHole):
-    a = arrHole[0]
-    b = arrHole[len(arrHole)-1]
-    if a > b:
-        a = b
-    d = 0
-    for c in arrHole:
-        val = a-c
-        if val > 0:
-            d = d+val
-    return d
 
 
 arr = [1, 2, 7, 3, 2, 1, 7, 2, 4, 6, 7, 8, 9, 9, 2, 5, 6, 7, 4, 5, 3, 2, 1]
@@ -73,3 +74,10 @@ holes = findHoles(arr)
 
 for h, i, j in holes:
     print(f"hole found from {i}-{j}: {h} hole val: {calHoleValue(h)}")
+
+"""
+hole found from 2-7: [7, 3, 2, 1, 7] hole val: 15
+hole found from 6-11: [7, 2, 4, 6, 7] hole val: 9
+hole found from 13-18: [9, 2, 5, 6, 7] hole val: 8
+hole found from 17-20: [7, 4, 5] hole val: 1
+"""
