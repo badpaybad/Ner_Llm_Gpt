@@ -24,7 +24,13 @@ using json = nlohmann::json;
 
 int main()
 {
-    printf("Hello from TensorFlow C library version %s\n", TF_Version());
+    bool a = true;
+    bool b(){
+        return false;
+    }
+    while ()
+
+        printf("Hello from TensorFlow C library version %s\n", TF_Version());
     
     return 0;
 }
