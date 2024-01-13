@@ -30,7 +30,7 @@ def findEndEdgeIndex(arr, fromEdgeIdx, fromEdgeVal):
     j = fromEdgeIdx+1
     length = len(arr)
     subarr = subArray(arr, j, length)
-    # print(f"subarr: {subarr} val: {val} idx: {idx}")
+    #print(f"subarr: {subarr} fromEdgeVal: {fromEdgeVal} fromEdgeIdx: {fromEdgeIdx}")
     b = j
     for jsub, jval in enumerate(subarr):
         if jval >= fromEdgeVal:
@@ -40,7 +40,7 @@ def findEndEdgeIndex(arr, fromEdgeIdx, fromEdgeVal):
     if b == j:
         jsub, jval = findMax(subarr)
         b = b+jsub
-        # print(f"bMax: {b} jsub: {jsub}")
+        #print(f"bMax: {b} jsub: {jsub}")
     return (b, subarr)
 
 
@@ -58,10 +58,13 @@ def findHoles(arr):
             continue
         beginIdxEdge = idx
         (endIdxEdge, subarr) = findEndEdgeIndex(arr, idx, val)
+        
         if endIdxEdge == j:
             break
         idx = endIdxEdge
-        endIdxEdge = endIdxEdge+1
+        
+        # can queue beginIdxEdge, endIdxEdge , arr to other thread to call : calHoleValue
+        endIdxEdge = endIdxEdge+1                
         hole = subArray(arr, beginIdxEdge, endIdxEdge)
         # print(f"hole: {hole} b: {b}")
         # can call : calHoleValue (hole) to get value, or may want to queue to other thread to call : calHoleValue
@@ -69,7 +72,7 @@ def findHoles(arr):
     return holes
 
 
-arr = [1, 2, 7, 3, 2, 1, 7, 2, 4, 6, 7, 8, 9, 9, 2, 5, 6, 7, 4, 5, 3, 2, 1]
+arr = [1, 2, 7, 3, 2, 1, 7, 2, 4, 6, 7, 8, 9, 9, 2, 5, 6, 7, 4, 5, 3,-1 ,5, 1]
 holes = findHoles(arr)
 
 for h, i, j in holes:
