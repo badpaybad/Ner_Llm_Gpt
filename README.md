@@ -1,5 +1,9 @@
 # Ner_Llm_Gpt
 
+Support Vietnamese 
+
+https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v1.0
+
 
 # llamma.cpp dockerfile
 
