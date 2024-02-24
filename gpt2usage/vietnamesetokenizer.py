@@ -7,8 +7,10 @@ class VietnameseGpt2Tokenizer():
         pass
     
     def encode(self, text):
+        #tokens_underthesea = underthesea.word_tokenize(text, format="text")
         tokens_underthesea = underthesea.word_tokenize(text)
         tokens_mapped = [token.lower() for token in tokens_underthesea]
+        #print(tokens_mapped)
         encoded_input = self.tokenizer_gpt2.encode(" ".join(tokens_mapped))
         return encoded_input
         pass
