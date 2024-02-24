@@ -146,7 +146,7 @@ def gpt2_train(model, tokenizer, models_folder="gpt2_trained_models", joke_loade
             models_folder, f"gpt2_medium_joker_{epoch}.pt"))
 
 MODEL_EPOCH = 4
-def gpt2_predict(model, tokenizer, models_folder="gpt2_trained_models"):
+def gpt2_predict_test(model, tokenizer, models_folder="gpt2_trained_models"):
     
 
     model_path = os.path.join(
@@ -226,7 +226,7 @@ gpt2_model = gpt2_model.to(device)
 
 gpt2_train(gpt2_model, gpt2_tokenizer,models_folder, joke_loader)
 
-gpt2_predict(gpt2_model, gpt2_tokenizer,models_folder)
+gpt2_predict_test(gpt2_model, gpt2_tokenizer,models_folder)
 
 
 model_path = os.path.join(
