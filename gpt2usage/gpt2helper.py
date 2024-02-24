@@ -244,11 +244,15 @@ def build_joker_loader():
     joke_loader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
     return joke_loader
 
-
+from transformers import XLMRobertaTokenizer
+import vietnamesetokenizer
 def build_pretrain_model_tokenizer():
 
-    gpt2_tokenizer = GPT2Tokenizer.from_pretrained('gpt2-medium')
+    gpt2_tokenizer = vietnamesetokenizer.VietnameseGpt2Tokenizer()
+    # gpt2_tokenizer = GPT2Tokenizer.from_pretrained('gpt2-medium')
+    # gpt2_tokenizer = XLMRobertaTokenizer.from_pretrained("xlm-roberta-base")
     gpt2_model = GPT2LMHeadModel.from_pretrained('gpt2-medium')
+    
     gpt2_model = gpt2_model.to(device)
 
     return gpt2_model, gpt2_tokenizer
