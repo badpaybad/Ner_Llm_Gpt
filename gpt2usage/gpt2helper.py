@@ -47,6 +47,13 @@ class JokesDataset(Dataset):
         super().__init__()
 
         short_jokes_path = os.path.join(jokes_dataset_path, 'shortjokes.csv')
+        '''
+        "ID","Joke"
+        1,"[me narrating a documentary about narrators] ""I can't hear what they're saying cuz I'm talking"""
+        2,"Telling my daughter garlic is good for you. Good immune system and keeps pests away.Ticks, mosquitos, vampires... men."
+        3,"I've been going through a really rough period at work this week It's my own fault for swapping my tampax for sand paper."
+        4,"If I could have dinner with anyone, dead or alive... ...I would choose alive. -B.J. Novak-"
+        '''
 
         self.joke_list = []
         self.end_of_text_token = "<|endoftext|>"

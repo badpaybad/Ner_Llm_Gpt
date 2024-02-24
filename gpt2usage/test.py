@@ -7,3 +7,7 @@ import datetime
 print(datetime.datetime.now())
 gpt2helper.generate_some_text_joke(gpt2_model, gpt2_tokenizer,"Telling my daughter garlic is good for you")
 print(datetime.datetime.now())
+
+print(datetime.datetime.now())
+gpt2helper.generate_some_text_joke(gpt2_model, gpt2_tokenizer,"Telling my daughter garlic is good for you")
+print(datetime.datetime.now())
