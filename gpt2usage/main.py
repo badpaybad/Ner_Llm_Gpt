@@ -152,10 +152,9 @@ def gpt2_predict(model, tokenizer, models_folder="gpt2_trained_models"):
     model_path = os.path.join(
         models_folder, f"gpt2_medium_joker_{MODEL_EPOCH}.pt")
     model.load_state_dict(torch.load(model_path))
-
-    jokes_output_file_path = f'generated_{MODEL_EPOCH}.jokes'
-
     model.eval()
+    
+    jokes_output_file_path = f'generated_{MODEL_EPOCH}.jokes'
     if os.path.exists(jokes_output_file_path):
         os.remove(jokes_output_file_path)
 
@@ -198,9 +197,9 @@ def gpt2_predict(model, tokenizer, models_folder="gpt2_trained_models"):
                 with open(jokes_output_file_path, 'a') as f:
                     f.write(f"{output_text} \n\n")
                     
-def generate_some_text(model,tokenizer,input_str, text_len = 250):
+def generate_some_text_joke(model,tokenizer,input_str, text_len = 250):
 
-    cur_ids = torch.tensor(tokenizer.encode(input_str)).unsqueeze(0).long().to(device)
+    cur_ids = torch.tensor(tokenizer.encode("JOKE:"+input_str)).unsqueeze(0).long().to(device)
 
     model.eval()
     with torch.no_grad():
@@ -217,6 +216,7 @@ def generate_some_text(model,tokenizer,input_str, text_len = 250):
         print(output_text)
         
 
+models_folder="gpt2_trained_models"
 dataset = JokesDataset()
 joke_loader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
 
@@ -224,6 +224,14 @@ gpt2_tokenizer = GPT2Tokenizer.from_pretrained('gpt2-medium')
 gpt2_model = GPT2LMHeadModel.from_pretrained('gpt2-medium')
 gpt2_model = gpt2_model.to(device)
 
-gpt2_train(gpt2_model, gpt2_tokenizer)
+gpt2_train(gpt2_model, gpt2_tokenizer,models_folder, joke_loader)
 
-gpt2_predict(gpt2_model, gpt2_tokenizer)
+gpt2_predict(gpt2_model, gpt2_tokenizer,models_folder)
+
+
+model_path = os.path.join(
+    models_folder, f"gpt2_medium_joker_{MODEL_EPOCH}.pt")
+gpt2_model.load_state_dict(torch.load(model_path))
+gpt2_model.eval()
+
+generate_some_text_joke(gpt2_model, gpt2_tokenizer,"Hello, I am Du")
