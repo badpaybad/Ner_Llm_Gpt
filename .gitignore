@@ -175,3 +175,7 @@ test_ho_ten/vocab/vectors.cfg
 gpt2usage/gpt2_trained_models/gpt2_medium_joker_0_test.pt
 gpt2usage/gpt2_trained_models/gpt2_medium_joker_0.pt
 gpt2usage/gpt2_trained_models/gpt2_medium_joker_1.pt
+gpt2usage/generated_gpt2_medium_joker_4.pt.jokes
+gpt2usage/gpt2_trained_models/gpt2_medium_joker_2.pt
+gpt2usage/gpt2_trained_models/gpt2_medium_joker_4.pt
+gpt2usage/gpt2_trained_models/gpt2_medium_joker_3.pt

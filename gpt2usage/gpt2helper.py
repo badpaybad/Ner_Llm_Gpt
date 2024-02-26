@@ -160,14 +160,16 @@ def gpt2_train(model, tokenizer, joke_loader=DataLoader(JokesDataset(), batch_si
 
 
 
-def gpt2_predict_test(model, tokenizer, model_epoch=MODEL_EPOCH, models_folder=MODELS_FOLDER):
+def gpt2_predict_test(model, tokenizer, model_epoch_name="gpt2_medium_joker_4.pt", models_folder=MODELS_FOLDER):
 
     model_path = os.path.join(
-        models_folder, f"gpt2_medium_joker_{model_epoch}.pt")
+        models_folder, model_epoch_name)
+    print("model_path")
+    print(model_path)
     model.load_state_dict(torch.load(model_path))
     model.eval()
 
-    jokes_output_file_path = f'generated_{model_epoch}.jokes'
+    jokes_output_file_path = f'generated_{model_epoch_name}.jokes'
     if os.path.exists(jokes_output_file_path):
         os.remove(jokes_output_file_path)
 
