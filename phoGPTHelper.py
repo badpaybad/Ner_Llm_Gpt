@@ -106,7 +106,6 @@ generateText("Viết bài văn nghị luận xã hội về an toàn giao thông
 
 # curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
 # sudo apt-get install git-lfs
-# git clone https://oauth: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@huggingface.co/vinai/PhoGPT-7B5-Instruct/
 
 # #https://phoenixnap.com/kb/install-java-ubuntu
 # #JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::")
