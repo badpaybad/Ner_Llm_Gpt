@@ -180,4 +180,4 @@ gpt2usage/gpt2_trained_models/gpt2_medium_joker_2.pt
 gpt2usage/gpt2_trained_models/gpt2_medium_joker_4.pt
 gpt2usage/gpt2_trained_models/gpt2_medium_joker_3.pt
 OpenAI.txt
-mistralvn/878e07a4-4c9a-4b65-9143-df80d8bbac4c.txt
+mistralvn/*.txt
