@@ -181,3 +181,5 @@ gpt2usage/gpt2_trained_models/gpt2_medium_joker_4.pt
 gpt2usage/gpt2_trained_models/gpt2_medium_joker_3.pt
 OpenAI.txt
 mistralvn/*.txt
+**/Vistral-7B-Chat/**
+mistralvn/amdgpu-install_6.0.60003-1_all.deb

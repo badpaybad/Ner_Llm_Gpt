@@ -56,9 +56,9 @@ ln -s /var/lib/dkms/amdgpu/6.3.6-1739731.22.04/source /var/lib/dkms/amdgpu/6.3.6
 # } 
 # """
 
-tokenizer = AutoTokenizer.from_pretrained('/work/Vistral-7B-Chat')
+tokenizer = AutoTokenizer.from_pretrained('Vistral-7B-Chat')
 model = AutoModelForCausalLM.from_pretrained(
-    '/work/Vistral-7B-Chat',
+    'Vistral-7B-Chat',
     torch_dtype=torch.bfloat16, # change to torch.float16 if you're using V100
     device_map=device_type,
     use_cache=True,
@@ -192,9 +192,7 @@ async def root():
 def runUvicorn(port):
     uvicorn.run(webApp, host="0.0.0.0", port=int(port), log_level="info")
 
-
 print(f"torch.cuda.is_available():{torch.cuda.is_available()}")
-    
     
 _http_port = str(sys.argv[1])
 
