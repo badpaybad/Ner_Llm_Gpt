@@ -5,6 +5,8 @@ import sys
 import threading
 import re
 import uvicorn
+
+import torch
 # insert at 1, 0 is the script path (or '' in REPL)
 ____workingDir = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(1, ____workingDir)
@@ -18,19 +20,30 @@ print("____workingDir", ____workingDir)
 # os.environ["AMD_SERIALIZE_KERNEL"] = "3"
 # os.environ["TORCH_USE_HIP_DSA"] = "1"
 
+
+os.environ["PYTORCH_ROCM_ARCH"] = "gfx1103"
+os.environ["HCC_AMDGPU_TARGET"] = "gfx1103"
+os.environ["HSA_OVERRIDE_GFX_VERSION"] = "11.03"
+
+
+print(f"CUDA support: {torch.cuda.is_available()} (Should be \"True\")")
+print(f"CUDA version: {torch.version.cuda} (Should be \"None\")")
+print(f"HIP version: {torch.version.hip} (Should contain value)")
+
 device_type="cpu"
 if len(sys.argv)>2:
     device_type = str(sys.argv[2])
     
 if device_type==None or device_type=="":
     device_type="cpu"
+    
+print(f"device_type: {device_type}")
 
 system_prompt = "Bạn là một trợ lí Tiếng Việt nhiệt tình và trung thực. Hãy luôn trả lời một cách hữu ích nhất có thể, đồng thời giữ an toàn.\n"
 system_prompt += "Câu trả lời của bạn không nên chứa bất kỳ nội dung gây hại, phân biệt chủng tộc, phân biệt giới tính, độc hại, nguy hiểm hoặc bất hợp pháp nào. Hãy đảm bảo rằng các câu trả lời của bạn không có thiên kiến xã hội và mang tính tích cực."
 system_prompt += "Nếu một câu hỏi không có ý nghĩa hoặc không hợp lý về mặt thông tin, hãy giải thích tại sao thay vì trả lời một điều gì đó không chính xác. Nếu bạn không biết câu trả lời cho một câu hỏi, hãy trẳ lời là bạn không biết và vui lòng không chia sẻ thông tin sai lệch."
 
 from fastapi import FastAPI
-import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 # pip3 install -U --pre torch torchvision torchaudio transformers --index-url https://download.pytorch.org/whl/nightly/rocm6.0
 """
@@ -55,6 +68,7 @@ ln -s /var/lib/dkms/amdgpu/6.3.6-1739731.22.04/source /var/lib/dkms/amdgpu/6.3.6
 # "summary":"tóm tắt đoạn văn"
 # } 
 # """
+print(f"torch.cuda.is_available: {torch.cuda.is_available()}")
 
 tokenizer = AutoTokenizer.from_pretrained('Vistral-7B-Chat')
 model = AutoModelForCausalLM.from_pretrained(
