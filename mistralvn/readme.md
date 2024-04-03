@@ -1,5 +1,12 @@
 sudo apt install "linux-headers-$(uname -r)" "linux-modules-extra-$(uname -r)"
+# run
+
+                cd mistralvn
+                python3 main.py 8080 cpu
+
+
 # See prerequisites. Adding current user to Video and Render groups
+
 sudo usermod -a -G render,video $LOGNAME
 wget https://repo.radeon.com/amdgpu-install/6.0.3/ubuntu/jammy/amdgpu-install_6.0.60003-1_all.deb
 sudo apt install ./amdgpu-install_6.0.60003-1_all.deb

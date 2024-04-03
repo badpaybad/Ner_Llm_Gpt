@@ -88,7 +88,7 @@ from pydantic import ValidationError
 from fastapi.staticfiles import StaticFiles
 from fastapi.security import HTTPBearer,OAuth2PasswordBearer
 from fastapi import Depends, HTTPException
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi import FastAPI, File, Form, UploadFile, Request, Response
@@ -204,6 +204,7 @@ async def llm_ask(msg:str=Form(None),conversationid:str=Form(f"{uuid.uuid4()}"),
 
 @webApp.get("/")
 async def root():
+    return RedirectResponse("/docs")
     return "swagger API docs: /docs"
 
 def runUvicorn(port):
