@@ -1,7 +1,12 @@
 FROM rocm-vistral7b-base
+USER root
 WORKDIR /app
 
+ENV HCC_AMDGPU_TARGET "gfx1103"
+ENV HSA_OVERRIDE_GFX_VERSION "11.0.0"
+ENV HIP_VISIBLE_DEVICES "0"
 COPY /main.py /app/main.py
+COPY /testrocm.py /app/testrocm.py
 
 EXPOSE 8080
 
@@ -10,8 +15,8 @@ CMD [ "python3", "main.py","8080","cuda"]
 #sudo apt update && sudo apt install -y git python3-pip python3-venv python3-dev libstdc++-12-dev 
 #docker build -f dockerfile -t rocm-vistral7b .
 #docker rm --force rocm_vistral7b_8880
-#with volume# docker run --privileged -d --restart always -p 11111:8080 -it --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --device=/dev/kfd --device=/dev/dri --group-add video --ipc=host --shm-size 8G --name rocm_vistral7b_8880 -v /work/Ner_Llm_Gpt/mistralvn:/app rocm-vistral7b  
+#with volume# docker run --user root --privileged -d --restart always -p 11111:8080 -it --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --device=/dev/kfd --device=/dev/dri --group-add video --group-add render --ipc=host --shm-size 8G --name rocm_vistral7b_8880 -v /work/Ner_Llm_Gpt/mistralvn:/app rocm-vistral7b  
 
-#no volue# docker run --privileged -d --restart always -p 11111:8080 -it --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --device=/dev/kfd --device=/dev/dri --group-add video --ipc=host --shm-size 8G --name rocm_vistral7b_8880 rocm-vistral7b  
-#docker run --privileged -it --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --device=/dev/kfd --device=/dev/dri --group-add video --ipc=host --shm-size 8G rocm/pytorch:latest
-#docker run -it --privileged --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --device=/dev/kfd --device=/dev/dri --group-add video --ipc=host --shm-size 24G 
+#no volue# docker run --user root --privileged -d --restart always -p 11111:8080 -it --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --device=/dev/kfd --device=/dev/dri --group-add video --group-add render --ipc=host --shm-size 8G --name rocm_vistral7b_8880 rocm-vistral7b  
+#docker run --user root --privileged -it --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --device=/dev/kfd --device=/dev/dri --group-add video --group-add render --ipc=host --shm-size 8G rocm/pytorch:latest
+#docker run --user root -it --privileged --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --device=/dev/kfd --device=/dev/dri --group-add video --group-add render --ipc=host --shm-size 24G 

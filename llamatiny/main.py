@@ -2,9 +2,9 @@ import os
 #os.environ["HIP_LAUNCH_BLOCKING"]="1"
 # 
 # pip install -U torch torchvision torchaudio -f https://download.pytorch.org/whl/torch_stable.html
-# os.environ["PYTORCH_ROCM_ARCH"] = "gfx1103" 
-# os.environ["HSA_OVERRIDE_GFX_VERSION"] = "11.0.3" 
-# os.environ["HIP_VISIBLE_DEVICES"] = "0" 
+os.environ["PYTORCH_ROCM_ARCH"] = "gfx1103" 
+os.environ["HSA_OVERRIDE_GFX_VERSION"] = "11.0.0" 
+os.environ["HIP_VISIBLE_DEVICES"] = "0" 
 # os.environ["ROCM_PATH"] = "/opt/rocm" 
 # Use a pipeline as a high-level helper
 # pip3 install -U numpy torch torchvision torchaudio soundfile sox --extra-index-url https://download.pytorch.org/whl/cpu

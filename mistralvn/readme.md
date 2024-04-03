@@ -23,3 +23,9 @@ sudo apt install "linux-headers-$(uname -r)" "linux-modules-extra-$(uname -r)"
 
 
                 https://oauth:...your token..@huggingface.co/Viet-Mistral/Vistral-7B-Chat
+
+# XNDA amd npu
+
+                https://github.com/amd/xdna-driver
+
+                git clone -b iommu_sva_part4_v6_v6.8_rc2 https://github.com/AMDESE/linux.git
