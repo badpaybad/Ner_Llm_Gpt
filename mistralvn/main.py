@@ -13,7 +13,7 @@ sys.path.insert(1, ____workingDir)
 
 print("____workingDir", ____workingDir)
 
-# path = os.environ["PYTORCH_HIP_ALLOC_CONF"]="expandable_segments:True"
+os.environ["PYTORCH_HIP_ALLOC_CONF"]="expandable_segments:True"
 # path = os.environ["HIP_LAUNCH_BLOCKING"]="1"
 # os.environ["PYTORCH_USE_CUDA_DSA"] = "1"
 # os.environ["HIP_VISIBLE_DEVICES"] = "0"
@@ -39,9 +39,15 @@ if device_type==None or device_type=="":
     
 print(f"device_type try to use: {device_type}")
 
-import testrocm
 
-testrocm.test_amd_rocm()
+torch.cuda.empty_cache()
+import gc
+gc.collect()
+torch.cuda.memory_summary(device=None, abbreviated=False)
+
+# import testrocm
+
+# testrocm.test_amd_rocm()
 
 system_prompt = "Bạn là một trợ lí Tiếng Việt nhiệt tình và trung thực. Hãy luôn trả lời một cách hữu ích nhất có thể, đồng thời giữ an toàn.\n"
 system_prompt += "Câu trả lời của bạn không nên chứa bất kỳ nội dung gây hại, phân biệt chủng tộc, phân biệt giới tính, độc hại, nguy hiểm hoặc bất hợp pháp nào. Hãy đảm bảo rằng các câu trả lời của bạn không có thiên kiến xã hội và mang tính tích cực."
