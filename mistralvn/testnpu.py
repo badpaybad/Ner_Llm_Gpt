@@ -7,11 +7,7 @@ import re
 import uvicorn
 
 import torch
-# pip3 install -U torch==1.8.1 torchvision==0.9.1 torchaudio==0.8.1 --index-url https://download.pytorch.org/whl/cpu
-
-# pip3 install install torch==2.1.0+cpu torchvision==0.16.0 torchaudio==2.1.0  --index-url https://download.pytorch.org/whl/cpu
-# pip3 install torch-npu==2.1.0
-# import torch_npu
+import torch_npu
 # insert at 1, 0 is the script path (or '' in REPL)
 ____workingDir = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(1, ____workingDir)
