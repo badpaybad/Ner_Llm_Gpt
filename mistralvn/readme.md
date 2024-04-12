@@ -9,6 +9,7 @@ sudo apt install "linux-headers-$(uname -r)" "linux-modules-extra-$(uname -r)"
 
 sudo usermod -a -G render,video $LOGNAME
 wget https://repo.radeon.com/amdgpu-install/6.0.3/ubuntu/jammy/amdgpu-install_6.0.60003-1_all.deb
+wget https://repo.radeon.com/amdgpu-install/6.0.3/ubuntu/focal/amdgpu-install_6.0.60003-1_all.deb
 sudo apt install ./amdgpu-install_6.0.60003-1_all.deb
 sudo apt update
 sudo apt install amdgpu-dkms,rocm
