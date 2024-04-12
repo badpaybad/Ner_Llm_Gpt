@@ -7,44 +7,44 @@ pip3 install -U transformers accelerate bitsandbytes
 
 # convert gufl
 
-https://github.com/ggerganov/llama.cpp/discussions/2948
+                https://github.com/ggerganov/llama.cpp/discussions/2948
 
-git clone https://github.com/ggerganov/llama.cpp.git
+                git clone https://github.com/ggerganov/llama.cpp.git
 
-pip install -r requirements.txt
+                pip install -r requirements.txt
 
-python convert.py "/work/llm/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat" --outfile Vistral-7B-Chat.gguf --outtype q8_0
-
-
-mkdir build
-cd build
-cmake ..
-cmake --build . --config Release
-
-mkdir build
-cd build
-cmake .. -DLLAMA_CUDA=ON
-cmake --build . --config Release
+                python convert.py "/work/llm/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat" --outfile Vistral-7B-Chat.gguf --outtype q8_0
 
 
-usage in folder build/bin
+                mkdir build
+                cd build
+                cmake ..
+                cmake --build . --config Release
 
-./main -m "/work/llm/llama.cpp/Vistral-7B-Chat.gguf" -n 128
-
-
-./server -m "/work/llm/llama.cpp/Vistral-7B-Chat.gguf" -c 2048
-
-
-python "/work/llama.cpp/convert.py" "/work/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat" --outfile Vistral-7B-Chat.gguf --outtype q8_0
-/work/llama.cpp/build/bin/server -m "/work/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat.gguf" -c 2048 --host 0.0.0.0 --port 11111
-
-copy build/bin to mistravn/bin
-copy Vistral-7B-Chat.gguf to mistravn/Vistral-7B-Chat.gguf
+                mkdir build
+                cd build
+                cmake .. -DLLAMA_CUDA=ON
+                cmake --build . --config Release
 
 
-docker run --gpus all -v /path/to/models:/models local/llama.cpp:full-cuda --run -m /models/7B/ggml-model-q4_0.gguf -p "Building a website can be done in 10 simple steps:" -n 512 --n-gpu-layers 1
-docker run --gpus all -v /path/to/models:/models local/llama.cpp:light-cuda -m /models/7B/ggml-model-q4_0.gguf -p "Building a website can be done in 10 simple steps:" -n 512 --n-gpu-layers 1
-docker run --gpus all -v /path/to/models:/models local/llama.cpp:server-cuda -m /models/7B/ggml-model-q4_0.gguf --port 8000 --host 0.0.0.0 -n 512 --n-gpu-layers 1
+                usage in folder build/bin
+
+                ./main -m "/work/llm/llama.cpp/Vistral-7B-Chat.gguf" -n 128
+
+
+                ./server -m "/work/llm/llama.cpp/Vistral-7B-Chat.gguf" -c 2048
+
+
+                python "/work/llama.cpp/convert.py" "/work/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat" --outfile Vistral-7B-Chat.gguf --outtype q8_0
+                /work/llama.cpp/build/bin/server -m "/work/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat.gguf" -c 2048 --host 0.0.0.0 --port 11111
+
+                copy build/bin to mistravn/bin
+                copy Vistral-7B-Chat.gguf to mistravn/Vistral-7B-Chat.gguf
+
+
+                docker run --gpus all -v /path/to/models:/models local/llama.cpp:full-cuda --run -m /models/7B/ggml-model-q4_0.gguf -p "Building a website can be done in 10 simple steps:" -n 512 --n-gpu-layers 1
+                docker run --gpus all -v /path/to/models:/models local/llama.cpp:light-cuda -m /models/7B/ggml-model-q4_0.gguf -p "Building a website can be done in 10 simple steps:" -n 512 --n-gpu-layers 1
+                docker run --gpus all -v /path/to/models:/models local/llama.cpp:server-cuda -m /models/7B/ggml-model-q4_0.gguf --port 8000 --host 0.0.0.0 -n 512 --n-gpu-layers 1
 
 
 # run nvidia
