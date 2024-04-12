@@ -34,6 +34,10 @@ usage in folder build/bin
 
 ./server -m "/work/llm/llama.cpp/Vistral-7B-Chat.gguf" -c 2048
 
+copy build/bin to mistravn/bin
+copy Vistral-7B-Chat.gguf to mistravn/Vistral-7B-Chat.gguf
+
+
 docker run --gpus all -v /path/to/models:/models local/llama.cpp:full-cuda --run -m /models/7B/ggml-model-q4_0.gguf -p "Building a website can be done in 10 simple steps:" -n 512 --n-gpu-layers 1
 docker run --gpus all -v /path/to/models:/models local/llama.cpp:light-cuda -m /models/7B/ggml-model-q4_0.gguf -p "Building a website can be done in 10 simple steps:" -n 512 --n-gpu-layers 1
 docker run --gpus all -v /path/to/models:/models local/llama.cpp:server-cuda -m /models/7B/ggml-model-q4_0.gguf --port 8000 --host 0.0.0.0 -n 512 --n-gpu-layers 1
