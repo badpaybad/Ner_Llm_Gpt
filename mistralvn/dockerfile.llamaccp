@@ -11,11 +11,15 @@ COPY /Vistral-7B-Chat.gguf /app/Vistral-7B-Chat.gguf
 ENV LC_ALL=C.utf8
 #./server -m "/work/llm/llama.cpp/Vistral-7B-Chat.gguf" -c 2048
 CMD [ "/bin/sh", "-c", "./bin/server -m '/app/Vistral-7B-Chat.gguf' -c 2048 --host 0.0.0.0 --port 8880"]
-
+ 
 #sudo apt update && sudo apt install -y git python3-pip python3-venv python3-dev libstdc++-12-dev 
 # docker build -f dockerfile.llamaccp -t llama-vistral7b .
 
-# docker run -d --restart always -p 8880:8880 --name llama-vistral7b_8880 llama-vistral7b
+# docker run -d --restart always -p 11111:8880 --name llama-vistral7b_8880 llama-vistral7b
+
+# sudo docker rmi -f b6548eacb063
+# sudo lsof -i -P -n | grep LISTEN
+# docker rm -v 123f7027e418a18595526a066afe7d9d0c9cfa1e705f579583ec8f5a00975e69
 
 #docker rm --force rocm_vistral7b_8880
 #with volume# docker run --user root --privileged -d --restart always -p 8880:8080 -it --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --device=/dev/kfd --device=/dev/dri --group-add video --group-add render --ipc=host --shm-size 8G --name rocm_vistral7b_8880 -v /work/Ner_Llm_Gpt/mistralvn:/app rocm-vistral7b  
