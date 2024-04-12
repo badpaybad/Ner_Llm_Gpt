@@ -5,7 +5,44 @@ pip3 install -U fastapi uvicorn imutils python-multipart pydantic easydict jwcry
 pip3 install -U torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 pip3 install -U transformers accelerate bitsandbytes
 
-# convert gufl
+# convert hugging face to gguf and build docker image 
+
+1. download huggingface model you need, mine is: https://huggingface.co/Viet-Mistral/Vistral-7B-Chat
+
+                to folder : "/work/llm/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat"
+
+2. clone llamacpp: git clone https://github.com/ggerganov/llama.cpp.git
+
+                cdd llama.cpp
+
+                pip install -r requirements.txt
+
+                # build for run in cpu
+
+                mkdir build
+                cd build
+                cmake ..
+                cmake --build . --config Release
+
+3. convert model to gguf
+
+                convert.py in folder llama.cpp cloned
+
+                python convert.py "/work/llm/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat" --outfile Vistral-7B-Chat.gguf --outtype q8_0
+
+4. build docker image and run
+
+                
+                copy build/bin to mistravn/bin (in step 2)
+
+                copy Vistral-7B-Chat.gguf to mistravn/Vistral-7B-Chat.gguf (in step 3)
+
+                docker build -f dockerfile.llamaccp -t llama-vistral7b .
+
+                docker run -d --restart always -p 22222:8880 --name llama-vistral7b_8880 llama-vistral7b
+                
+
+# draft                
 
                 https://github.com/ggerganov/llama.cpp/discussions/2948
 
