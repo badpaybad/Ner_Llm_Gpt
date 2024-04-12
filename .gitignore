@@ -183,4 +183,5 @@ OpenAI.txt
 mistralvn/*.txt
 **/Vistral-7B-Chat/**
 mistralvn/amdgpu-install_6.0.60003-1_all.deb
-amdgpu-install_6.0.60003-1_all.deb
+amdgpu-install_6.0.60003-1_all.debug
+chatgpt4api/config.py

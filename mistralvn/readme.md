@@ -1,12 +1,31 @@
-sudo apt install "linux-headers-$(uname -r)" "linux-modules-extra-$(uname -r)"
-# run
+# ram or vram require min 12GB
+
+sudo apt install python3 python3-pip
+pip3 install -U fastapi uvicorn imutils python-multipart pydantic easydict jwcrypto unidecode requests
+pip3 install -U torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+pip3 install -U transformers accelerate bitsandbytes
+
+# run nvidia
+
+https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
+
+sudo apt-get install -y nvidia-container-toolkit
+
+https://pytorch.org/get-started/locally/
+
+pip3 install torch torchvision torchaudio
+
+                python3 main.py 8080 cuda
+
+# run cpu
 
                 cd mistralvn
                 python3 main.py 8080 cpu
 
 
-# See prerequisites. Adding current user to Video and Render groups
+# See prerequisites. Adding current user to Video and Render groups AMD
 
+sudo apt install "linux-headers-$(uname -r)" "linux-modules-extra-$(uname -r)"
 sudo usermod -a -G render,video $LOGNAME
 wget https://repo.radeon.com/amdgpu-install/6.0.3/ubuntu/jammy/amdgpu-install_6.0.60003-1_all.deb
 wget https://repo.radeon.com/amdgpu-install/6.0.3/ubuntu/focal/amdgpu-install_6.0.60003-1_all.deb
