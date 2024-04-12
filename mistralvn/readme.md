@@ -13,7 +13,9 @@ pip3 install -U transformers accelerate bitsandbytes
 
 2. clone llamacpp: git clone https://github.com/ggerganov/llama.cpp.git
 
-                cdd llama.cpp
+Open terminal , go to inside foler llama.cpp
+
+                cd llama.cpp
 
                 pip install -r requirements.txt
 
@@ -26,7 +28,7 @@ pip3 install -U transformers accelerate bitsandbytes
 
 3. convert model to gguf
 
-                convert.py in folder llama.cpp cloned
+convert.py in folder llama.cpp cloned
 
                 python convert.py "/work/llm/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat" --outfile Vistral-7B-Chat.gguf --outtype q8_0
 
