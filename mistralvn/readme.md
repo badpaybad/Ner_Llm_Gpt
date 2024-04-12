@@ -34,6 +34,10 @@ usage in folder build/bin
 
 ./server -m "/work/llm/llama.cpp/Vistral-7B-Chat.gguf" -c 2048
 
+
+python "/work/llama.cpp/convert.py" "/work/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat" --outfile Vistral-7B-Chat.gguf --outtype q8_0
+/work/llama.cpp/build/bin/server -m "/work/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat.gguf" -c 2048 --host 0.0.0.0 --port 11111
+
 copy build/bin to mistravn/bin
 copy Vistral-7B-Chat.gguf to mistravn/Vistral-7B-Chat.gguf
 
