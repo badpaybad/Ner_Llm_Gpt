@@ -5,7 +5,7 @@ pip3 install -U fastapi uvicorn imutils python-multipart pydantic easydict jwcry
 pip3 install -U torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 pip3 install -U transformers accelerate bitsandbytes
 
-# convert hugging face to gguf and build docker image 
+# Convert huggingface model to gguf and build docker image to run in CPU
 
 1. download huggingface model you need, mine is: https://huggingface.co/Viet-Mistral/Vistral-7B-Chat
 
