@@ -63,6 +63,7 @@ CPU
 NVIDIA
                 mkdir build
                 cd build
+                export CUDACXX=/usr/local/cuda-12/bin/nvcc
                 cmake .. -DLLAMA_CUDA=ON
                 cmake --build . --config Release
 
