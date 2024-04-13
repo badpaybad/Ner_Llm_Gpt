@@ -42,6 +42,10 @@ convert.py in folder llama.cpp cloned
                 docker build -f dockerfile.llamaccp -t llama-vistral7b .
 
                 docker run -d --restart always -p 22222:8880 --name llama-vistral7b_8880 llama-vistral7b
+
+5. run bash 
+
+                /work/llama.cpp/build/bin/server -m '/work/llama.cpp/Vistral-7B-Chat.gguf' -c 2048 --host 0.0.0.0 --port 8880
                 
 
 # draft                
@@ -53,6 +57,8 @@ convert.py in folder llama.cpp cloned
                 pip install -r requirements.txt
 
                 python convert.py "/work/llm/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat" --outfile Vistral-7B-Chat.gguf --outtype q8_0
+
+                python convert.py "/work/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat" --outfile Vistral-7B-Chat.gguf --outtype q8_0
 
 CPU
                 mkdir build
