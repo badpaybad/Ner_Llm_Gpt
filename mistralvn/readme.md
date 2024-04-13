@@ -1,9 +1,3 @@
-# ram or vram require min 12GB
-
-sudo apt install python3 python3-pip
-pip3 install -U fastapi uvicorn imutils python-multipart pydantic easydict jwcrypto unidecode requests
-pip3 install -U torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-pip3 install -U transformers accelerate bitsandbytes
 
 # Convert huggingface model to gguf and build docker image to run in CPU
 
@@ -47,6 +41,12 @@ convert.py in folder llama.cpp cloned
 
                 /work/llama.cpp/build/bin/server -m '/work/llama.cpp/Vistral-7B-Chat.gguf' -c 2048 --host 0.0.0.0 --port 8880
                 
+# ram or vram require min 4GB
+
+sudo apt install python3 python3-pip
+pip3 install -U fastapi uvicorn imutils python-multipart pydantic easydict jwcrypto unidecode requests
+pip3 install -U torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+pip3 install -U transformers accelerate bitsandbytes
 
 # draft                
 
