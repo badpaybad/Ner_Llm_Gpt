@@ -54,16 +54,23 @@ convert.py in folder llama.cpp cloned
 
                 python convert.py "/work/llm/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat" --outfile Vistral-7B-Chat.gguf --outtype q8_0
 
-
+CPU
                 mkdir build
                 cd build
                 cmake ..
                 cmake --build . --config Release
 
+NVIDIA
                 mkdir build
                 cd build
                 cmake .. -DLLAMA_CUDA=ON
                 cmake --build . --config Release
+
+AMD
+                mkdir build
+                cd build
+                cmake -DLLAMA_HIPBLAS=ON -DHIP_PLATFORM=amd -DAMDGPU_TARGETS=gfx1103 -DCMAKE_BUILD_TYPE=Release ..
+                cmake --build . -j 16 
 
 
                 usage in folder build/bin
