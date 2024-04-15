@@ -72,8 +72,6 @@ response:
 
 NVIDIA : https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=20.04&target_type=deb_local 
 
-
-
                 mkdir build
                 cd build
                 export CUDACXX=/usr/local/cuda-12/bin/nvcc
@@ -84,9 +82,19 @@ NVIDIA : https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch
 
 dockerfile
 
+                curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+                curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+                sudo apt-get update
+                sudo apt-get install -y nvidia-docker2
+
+                sudo systemctl daemon-reload
+                sudo systemctl restart docker
+
                 docker pull nvidia/cuda:12.4.1-devel-ubuntu22.04 
 
                 dockerfile.gpu.llamaccp
+
+9. docker amd rocm gpu build
 
 # Ner_Llm_Gpt
 
