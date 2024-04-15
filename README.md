@@ -92,7 +92,23 @@ dockerfile
 
                 docker pull nvidia/cuda:12.4.1-devel-ubuntu22.04 
 
-                dockerfile.gpu.llamaccp
+dockerfile.gpu.llamaccp
+
+                FROM nvidia/cuda:12.4.1-devel-ubuntu22.04 
+                USER root
+                WORKDIR /app 
+                EXPOSE 8880
+                COPY /bin.gpu/ /app/bin/
+
+                COPY /favicon.ico /app/favicon.ico
+                COPY /favicon.png /app/favicon.png
+
+                COPY /Vistral-7B-Chat.gpu.gguf /app/Vistral-7B-Chat.gguf
+                ENV LLAMA_CUDA=1
+                ENV LLAMA_CURL=1
+                ENV CUDA_DOCKER_ARCH=all
+                ENV LC_ALL=C.utf8
+                CMD [ "/bin/sh", "-c", "./bin/server -m '/app/Vistral-7B-Chat.gguf' -c 2048 --host 0.0.0.0 --port 8880"]
 
 9. docker amd rocm gpu build
 
