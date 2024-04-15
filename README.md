@@ -41,6 +41,17 @@ convert.py in folder llama.cpp cloned
 
                 /work/llama.cpp/build/bin/server -m '/work/llama.cpp/Vistral-7B-Chat.gguf' -c 2048 --host 0.0.0.0 --port 8880
 
+6. dockerfile.llamacpp
+
+                FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+                USER root
+                WORKDIR /app 
+                RUN apt-get update &&  apt-get install -y build-essential git libc6
+                EXPOSE 8880
+                COPY /bin/ /app/bin/
+                COPY /Vistral-7B-Chat.gguf /app/Vistral-7B-Chat.gguf
+                ENV LC_ALL=C.utf8
+                CMD [ "/bin/sh", "-c", "./bin/server -m '/app/Vistral-7B-Chat.gguf' -c 2048 --host 0.0.0.0 --port 8880"]
 
 # Ner_Llm_Gpt
 
