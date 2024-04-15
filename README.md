@@ -68,6 +68,25 @@ response:
 
                 {"content":" Việt Nam là một quốc gia xinh đẹp ở Đông Nam Á với lịch sử và văn hóa phong phú, nổi tiếng với những cảnh quan thiên nhiên tuyệt vời như Vịnh Hạ Long hay động Phong Nha. Nó cũng có nền ẩm thực đa dạng phản ánh di sản lâu đời của nó ","id_slot":0,"stop":true,"model":"/app/Vistral-7B-Chat.gguf","tokens_predicted":58,"tokens_evaluated":78,"generation_settings":{"n_ctx":2048,"n_predict":-1,"model":"/app/Vistral-7B-Chat.gguf","seed":4294967295,"temperature":0.699999988079071,"dynatemp_range":0.0,"dynatemp_exponent":1.0,"top_k":40,"top_p":0.949999988079071,"min_p":0.05000000074505806,"tfs_z":1.0,"typical_p":1.0,"repeat_last_n":256,"repeat_penalty":1.1799999475479126,"presence_penalty":0.0,"frequency_penalty":0.0,"penalty_prompt_tokens":[],"use_penalty_prompt_tokens":false,"mirostat":0,"mirostat_tau":5.0,"mirostat_eta":0.10000000149011612,"penalize_nl":false,"stop":["</s>","Llama:","User:"],"n_keep":0,"n_discard":0,"ignore_eos":false,"stream":false,"logit_bias":[],"n_probs":0,"min_keep":0,"grammar":"","samplers":["top_k","tfs_z","typical_p","top_p","min_p","temperature"]},"prompt":"This is a conversation between User and Llama, a friendly chatbot. Llama is helpful, kind, honest, good at writing, and never fails to answer any requests immediately and with precision.\n\nUser: hi\nLlama: Hello! How may I help you?\n\n\nUser: giới thiệu về Việt Nam\nLlama:","truncated":false,"stopped_eos":true,"stopped_word":false,"stopped_limit":false,"stopping_word":"","tokens_cached":135,"timings":{"prompt_n":1,"prompt_ms":196.862,"prompt_per_token_ms":196.862,"prompt_per_second":5.079700500858469,"predicted_n":58,"predicted_ms":11245.507,"predicted_per_token_ms":193.88805172413794,"predicted_per_second":5.157615392529657}}
 
+8. docker nvidia gpu build
+
+NVIDIA : https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=20.04&target_type=deb_local 
+
+
+
+                mkdir build
+                cd build
+                export CUDACXX=/usr/local/cuda-12/bin/nvcc
+                cmake .. -DLLAMA_CUDA=ON -DCMAKE_CUDA_COMPILER=/usr/local/cuda-12/bin/nvcc -DCUDAToolkit_ROOT=/usr/local/cuda-12
+                cmake --build . --config Release
+
+                 python "/work/llm/llama.cpp/convert.py" "/work/llm/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat" --outfile "/work/llm/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat.gpu.gguf" --outtype q8_0
+
+dockerfile
+
+                docker pull nvidia/cuda:12.4.1-devel-ubuntu22.04 
+
+                dockerfile.gpu.llamaccp
 
 # Ner_Llm_Gpt
 

@@ -28,6 +28,8 @@ convert.py in folder llama.cpp cloned
 
 4. build docker image and run
 
+                python "/work/llm/llama.cpp/convert.py" "/work/llm/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat" --outfile "/work/llm/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat.gpu.gguf" --outtype q8_0
+
                 
                 copy build/bin to mistravn/bin (in step 2)
 
@@ -71,7 +73,11 @@ NVIDIA
                 mkdir build
                 cd build
                 export CUDACXX=/usr/local/cuda-12/bin/nvcc
+                export CMAKE_CUDA_COMPILER=/usr/local/cuda-12/bin/nvcc
                 cmake .. -DLLAMA_CUDA=ON
+
+                cmake .. -DLLAMA_CUDA=ON -DCMAKE_CUDA_COMPILER=/usr/local/cuda-12/bin/nvcc -DCUDAToolkit_ROOT=/usr/local/cuda-12
+
                 cmake --build . --config Release
 
 AMD
