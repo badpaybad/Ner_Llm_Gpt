@@ -165,12 +165,6 @@ async def llm_get(conversationid:str=Form(f"{uuid.uuid4()}")):
 @webApp.post("/apis/llm/ask")
 async def llm_ask(msg:str=Form(None),conversationid:str=Form(f"{uuid.uuid4()}"), systemguideline:str=Form(system_prompt),):
     uuid.UUID(conversationid)
-    # try:
-    #     f = open(f"{conversationid}.txt", "a")
-    #     f.write(f"{msg}\r\n")
-    #     f.close()
-    # except:
-    #     pass
     conversation=[]
     if conversationid not in conversation_sessions.keys():
         if systemguideline==None or systemguideline=="":
