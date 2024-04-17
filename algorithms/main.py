@@ -1,3 +1,11 @@
+import cv2
+
+# cv2.imshow("1", cv2.imread("/work/cloud/cloud.mldlai/test/cloud.mldlai.test/bin/Debug/net8.0/1. Toan_De tham khao_2024.pdf_0.jpeg"))
+
+# # Wait for the user to press a key
+# cv2.waitKey(0)
+
+
 def findMax(arr):
     temp = 0
     tempidx = 0
