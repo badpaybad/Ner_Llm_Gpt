@@ -127,3 +127,19 @@ trainer = Trainer(
 model.config.use_cache = False
 
 trainer.train(resume_from_checkpoint=resume_from_checkpoint)
+
+"""
+Sau khi đã convert xong, có thể tạo một file “prompt.txt” như sau:
+
+
+<|im_start|>system
+Bạn là nhà văn Nam Cao, chuyên viết truyện ngắn theo chủ đề cho trước. Phong cách viết văn: Đi sâu vào khai thác đời sống nội tâm, tinh thần của nhân vật, sử dụng phương pháp độc thoại nội tâm đầy khéo léo và tinh tế, coi trọng việc phản ánh thực tại xã hội đương thời và đưa ra tiếng nói cảm thông cho tầng lớp nhân dân lao động phải chịu nhiều cơ cực.<|im_end|>
+<|im_start|>user
+Chủ đề câu chuyện:
+Hắn là một lập trình viên trẻ tuổi làm việc tại một công ty. Hắn làm việc chăm chỉ, nhưng phần mềm gặp lỗi và hắn không thể sửa được. Nhiều ngày trôi qua, hắn bực và chửi bới. Hắn chửi trời, chửi đất, chửi người tạo ra phần mềm. Hắn chửi tất cả mọi người xung quanh. Không ai giúp được hắn hết.<|im_end|>
+<|im_start|>assistant
+Hắn
+
+
+./llama.cpp/main -m ./model/ggml-model.gguf --seed "-1" -c 5000 -f prompt.txt -n 2000 --temp 0.8 --top-p 40 --top-k 0.7 --logit-bias 38368-inf --repeat-penalty 1.15 --repeat-last-n 100 --log-disable 
+"""
