@@ -112,6 +112,10 @@ dockerfile.gpu.llamaccp
 
 9. docker amd rocm gpu build
 
+# finetune vistral 
+
+ref: https://blog.ngxson.com/fine-tune-model-viet-truyen-phong-cach-nam-cao/ 
+
 # Ner_Llm_Gpt
 
 Support Vietnamese 
