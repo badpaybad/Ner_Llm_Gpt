@@ -11,7 +11,7 @@ import warnings
 from datasets import load_dataset
 from trl import SFTTrainer
 
-import mistralvnfinetune.tokenizer_dataset as tokenizer_dataset
+import tokenizer_dataset
 
 hf_token = ''
 wnb_token = ''
@@ -143,3 +143,5 @@ Hắn
 
 ./llama.cpp/main -m ./model/ggml-model.gguf --seed "-1" -c 5000 -f prompt.txt -n 2000 --temp 0.8 --top-p 40 --top-k 0.7 --logit-bias 38368-inf --repeat-penalty 1.15 --repeat-last-n 100 --log-disable 
 """
+#pip install accelerate --upgrade
+#pip install -i https://pypi.org/simple/ bitsandbytes --upgrade
