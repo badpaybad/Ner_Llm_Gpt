@@ -8,6 +8,8 @@
 
                 python "/work/llama.cpp/convert.py" "/work/Meta-Llama-3-8B" --outfile "/work/Ner_Llm_Gpt/llama3/Meta-Llama-3-8B.gpu.gguf" --outtype q8_0
 
+                python "/work/llama.cpp/convert.py" "/work/Meta-Llama-3-8B" --outfile "/work/Ner_Llm_Gpt/llama3/Meta-Llama-3-8B.gpu.gguf" --outtype q8_0 --vocab-type bpe
+
 # usage
 
                 cd llama3
