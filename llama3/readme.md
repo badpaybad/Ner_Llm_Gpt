@@ -1,8 +1,8 @@
 # huggingface-cli
 
                 git clone https://oauth:..token hf here...@huggingface.co/meta-llama/Meta-Llama-3-8B
-                huggingface-cli login
-                huggingface-cli download meta-llama/Meta-Llama-3-8B --include "original/*" --local-dir Meta-Llama-3-8B
+                # huggingface-cli login
+                # huggingface-cli download meta-llama/Meta-Llama-3-8B --include "original/*" --local-dir Meta-Llama-3-8B
 
 # convert
 

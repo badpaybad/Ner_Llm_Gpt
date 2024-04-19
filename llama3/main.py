@@ -23,7 +23,7 @@ system_prompt="This is a conversation between User and Llama, a friendly chatbot
 conversation = [{"role": "system", "content": system_prompt }]
 
 t1= datetime.datetime.now().timestamp()
-conversation.append({"role": "user", "content": "How are you today?" })
+conversation.append({"role": "user", "content": "Are you llama3?" })
 
 input_ids = tokenizer.apply_chat_template(conversation, return_tensors="pt").to(model.device)
 out_ids = model.generate(
