@@ -5,6 +5,10 @@
 
 1. download huggingface model you need, mine is: https://huggingface.co/Viet-Mistral/Vistral-7B-Chat
 
+                git clone https://oauth:..token hf here...@huggingface.co/meta-llama/Meta-Llama-3-8B
+
+                git clone https://oauth:..token hf here...@huggingface.co/Viet-Mistral/Vistral-7B-Chat
+
                 to folder : "/work/llm/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat"
 
 2. clone llamacpp: git clone https://github.com/ggerganov/llama.cpp.git
