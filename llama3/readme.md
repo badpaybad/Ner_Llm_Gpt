@@ -10,6 +10,10 @@
 
                 python "/work/llama.cpp/convert.py" "/work/Meta-Llama-3-8B" --outfile "/work/Ner_Llm_Gpt/llama3/Meta-Llama-3-8B.gpu.gguf" --outtype q8_0 --vocab-type bpe
 
+# llamacpp run
+
+                /work/llama.cpp/build/bin/server -m '/work/Ner_Llm_Gpt/llama3/Meta-Llama-3-8B.gpu.gguf' -c 2048 --host 0.0.0.0 --port 8080
+
 # usage
 
                 cd llama3
