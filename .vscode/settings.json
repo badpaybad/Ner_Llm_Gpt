@@ -62,5 +62,7 @@
         "typeinfo": "cpp",
         "numeric": "cpp",
         "fstream": "cpp"
-    },    
+    },
+    "cmake.configureOnOpen": false,
+    
 }

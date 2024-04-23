@@ -29,13 +29,13 @@ input_ids = tokenizer.apply_chat_template(conversation, return_tensors="pt").to(
 out_ids = model.generate(
     input_ids=input_ids,
     #max_new_tokens=768,
-    max_new_tokens=512,
+    max_new_tokens=400,
     pad_token_id=2,
     do_sample=True,
     top_p=0.95,
     top_k=40,
-    temperature=0.1,
-    repetition_penalty=1.05,
+    temperature=0.7,
+    repetition_penalty=1.18,
 )
 assistant = tokenizer.batch_decode(out_ids[:, input_ids.size(1): ], skip_special_tokens=True)[0].strip()    
 #conversation.append({"role": "assistant", "content": assistant })
