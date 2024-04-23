@@ -189,3 +189,4 @@ amdgpu-install_6.0.60003-1_all.deb
 **/bin/**
 **.gguf
 **/bin.gpu/**
+mediapipe/exported_model/**
