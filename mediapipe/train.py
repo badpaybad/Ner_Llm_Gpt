@@ -117,7 +117,13 @@ print("train_data size: ", train_data.size)
 print("validation_data size: ", validation_data.size)
 
 spec = object_detector.SupportedModels.MOBILENET_MULTI_AVG
-hparams = object_detector.HParams(export_dir='exported_model')
+# spec = object_detector.SupportedModels.MOBILENET_V2
+#https://developers.google.com/mediapipe/api/solutions/python/mediapipe_model_maker/object_detector/SupportedModels
+hparams = object_detector.HParams( 
+    learning_rate = 0.3,
+    batch_size = 16,
+    epochs = 100,
+export_dir='exported_model')
 options = object_detector.ObjectDetectorOptions(
     supported_model=spec,
     hparams=hparams
