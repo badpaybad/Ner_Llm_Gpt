@@ -73,6 +73,7 @@ annotated_image = visualize(image_copy, detection_result)
 rgb_annotated_image = cv2.cvtColor(annotated_image, cv2.COLOR_BGR2RGB)
 # cv2.imshow("", rgb_annotated_image)
 
+cv2.imwrite("detected.jpg", rgb_annotated_image)
 
 imgplot = plt.imshow(rgb_annotated_image)
 plt.show()
