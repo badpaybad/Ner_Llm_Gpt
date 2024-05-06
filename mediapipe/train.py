@@ -30,14 +30,15 @@ import numpy as np
 # plt.colorbar()  # Add a colorbar for better visualization
 # plt.show()
 
+# pip install -U jaxlib==0.4.12
 from mediapipe_model_maker import object_detector
 import os
 import json
 import tensorflow as tf
 assert tf.__version__.startswith('2')
 
-train_dataset_path = "/home/dunp/Downloads/android_figurine/train"
-validation_dataset_path="/home/dunp/Downloads/android_figurine/validation"
+train_dataset_path = "/work/cloud/cloud.mldlai/test/train"
+validation_dataset_path="/work/cloud/cloud.mldlai/test/train"
 
 with open(os.path.join(train_dataset_path, "labels.json"), "r") as f:
     labels_json = json.load(f)
@@ -127,12 +128,12 @@ model = object_detector.ObjectDetector.create(
     validation_data=validation_data,
     options=options)
 
-loss, coco_metrics = model.evaluate(validation_data, batch_size=4)
+loss, coco_metrics = model.evaluate(validation_data, batch_size=1)
 print(f"Validation loss: {loss}")
 print(f"Validation coco metrics: {coco_metrics}")
 
-
-model.export_model()
+finalmodel = model.export_model()
+print(finalmodel)
 
 
 

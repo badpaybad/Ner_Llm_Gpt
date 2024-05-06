@@ -50,14 +50,16 @@ def visualize(
 
 # STEP 2: Create an ObjectDetector object.
 base_options = python.BaseOptions(
-    model_asset_path='/work/Ner_Llm_Gpt/mediapipe/exported_model/model.tflite')
+    model_asset_path='/work/llm/Ner_Llm_Gpt/mediapipe/exported_model/model.tflite')
 options = vision.ObjectDetectorOptions(base_options=base_options,
                                        score_threshold=0.5)
 detector = vision.ObjectDetector.create_from_options(options)
 
 # STEP 3: Load the input image.
 image = mp.Image.create_from_file(
-    "/home/dunp/Downloads/android_figurine/train/images/IMG_0509.jpg")
+    #"/home/dunp/Downloads/android_figurine/train/images/IMG_0509.jpg"
+    "/work/cloud/cloud.mldlai/test/new.jpg.txt.jpg"
+    )
 
 # STEP 4: Detect objects in the input image.
 detection_result = detector.detect(image)
