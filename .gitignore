@@ -190,3 +190,5 @@ amdgpu-install_6.0.60003-1_all.deb
 **.gguf
 **/bin.gpu/**
 mediapipe/exported_model/**
+**/train-val/**
+**/hannomdataset/**
