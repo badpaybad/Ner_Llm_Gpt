@@ -6,6 +6,11 @@ sourceHanNomFolder="/work/llm/Ner_Llm_Gpt/mediapipe/train-val"
 #               0 0.882222 0.871589 0.037778 0.041734
 #./wb_localization_dataset/images/val/nlvnpf-0137-01-045.jpg
 
+# sudo apt install libgtk2.0-dev pkg-config
+# pip3 install mediapipe mediapipe_model_maker 
+# # pip3 install opencv-python opencv-contrib-python
+
+import json
 import os,sys
 import shutil, cv2
 
@@ -52,41 +57,71 @@ def get_file_name_without_extension(file_path):
     return name
 
 
-dir_labels_train=f"{sourceHanNomFolder}/wb_localization_dataset/labels/train"
 
 def center_to_corner(x, y, w, h, imgW,imgH):    
-    return int(x*imgW), int(y*imgH), int(w*imgW), int(h*imgH),
+    return int((x-w/2)*imgW), int((y-h/2)*imgH), int((x+w/2)*imgW), int((y+h/2)*imgH)
 
-for filename in os.listdir(dir_labels_train):
-        # Check if the path is a file
-        file_path=os.path.join(dir_labels_train, filename)
-        
-        filename0Ext=get_file_name_without_extension(file_path)
-        
-        if os.path.isfile(file_path):
-            img= cv2.imread(f"{cocoHanNomFolderTrainImages}/{filename0Ext}.jpg")
-            
-            imgh,imgw,imgc= img.shape
-            
-            with open(file_path, 'r') as file:
-            # Read the entire contents of the file
-                file_contents = file.read()
-                lines = file_contents.splitlines()                
-                for l in lines:
-                    l=l.strip().replace("  "," ")
-                    words = l.split()
-                    x= float(words[1])
-                    y= float(words[2])
-                    w= float(words[3])
-                    h= float(words[4])
-                   
-                    x,y,w,h = center_to_corner(x,y,w,h,imgw,imgh)                   
-                    
-                    drawed= cv2.rectangle(img, (x,y,x+w,x+h), (0, 255, 0),1)
-                                        
-                    cv2.imshow("Image with Rectangle", drawed)
-                    cv2.waitKey(0)
-                    
-                    
-                    
+def convert(dir_labels_train=f"{sourceHanNomFolder}/wb_localization_dataset/labels/train", cocoDirImages=cocoHanNomFolderTrainImages,cocoJsonFile=cocoHanNomFolderTrain):
+    
+    catid=1
+    images=[]
+    categories=[]
+    annotations=[]
+    categories.append({"id":catid,"name":"hannom"})
 
+    imageId=0
+    for filename in os.listdir(dir_labels_train):
+            # Check if the path is a file
+            file_path=os.path.join(dir_labels_train, filename)
+            
+            filename0Ext=get_file_name_without_extension(file_path)
+            
+            if os.path.isfile(file_path):
+                img= cv2.imread(f"{cocoDirImages}/{filename0Ext}.jpg")
+                images.append({
+                    "id":imageId,
+                    "file_name":f"{filename0Ext}.jpg"
+                })
+                imgh,imgw,imgc= img.shape
+                
+                with open(file_path, 'r') as file:
+                # Read the entire contents of the file
+                    file_contents = file.read()
+                    lines = file_contents.splitlines()                
+                    for l in lines:
+                        l=l.strip().replace("  "," ")
+                        words = l.split()
+                        x= float(words[1])
+                        y= float(words[2])
+                        w= float(words[3])
+                        h= float(words[4])
+                        
+                        x,y,x1,y1 = center_to_corner(x,y,w,h,imgw,imgh)                   
+                        
+                        drawed= cv2.rectangle(img, (x,y),(x1,y1), (0, 255, 0),1)
+                        w= x1-x
+                        h=y1-y                 
+                        # cv2.imshow("Image with Rectangle", drawed)
+                        # cv2.waitKey(0)
+                        annotations.append({
+                            "image_id":imageId,
+                            "bbox":[x,y,w,h],
+                            "category_id":catid
+                        })
+                        
+                imageId=imageId+1        
+                        
+
+    cocodata={
+        "images":images,
+        "annotations":annotations,
+        "categories":categories,
+    }
+
+    with open(f"{cocoJsonFile}/labels.json", 'w') as file:
+        text=json.dumps(cocodata)
+        file.write(text)
+        
+convert (f"{sourceHanNomFolder}/wb_localization_dataset/labels/train", cocoHanNomFolderTrainImages, cocoHanNomFolderTrain)
+
+convert (f"{sourceHanNomFolder}/wb_localization_dataset/labels/val", cocoHanNomFolderValidImages, cocoHanNomFolderValid)

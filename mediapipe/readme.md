@@ -19,3 +19,21 @@ Use coco json format
                     "categories":[{"id":1,"name":"B"},...]
                 }
 
+# han nom dir stuct
+
+                /train-val/wb_localization_dataset
+                |---------/images
+                |---------/------/train
+                |---------/------/val
+                |---------/labels
+                |---------/------/train
+                |---------/------/val
+
+
+                python convethannom2coco.py
+
+# han nom train , predict
+
+                python train.py
+                python inference.py
+

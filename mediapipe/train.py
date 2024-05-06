@@ -37,8 +37,8 @@ import json
 import tensorflow as tf
 assert tf.__version__.startswith('2')
 
-train_dataset_path = "/work/cloud/cloud.mldlai/test/train"
-validation_dataset_path="/work/cloud/cloud.mldlai/test/train"
+train_dataset_path = "/work/llm/Ner_Llm_Gpt/mediapipe/hannomdataset/train"
+validation_dataset_path="/work/llm/Ner_Llm_Gpt/mediapipe/hannomdataset/valid"
 
 with open(os.path.join(train_dataset_path, "labels.json"), "r") as f:
     labels_json = json.load(f)
