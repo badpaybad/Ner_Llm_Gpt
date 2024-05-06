@@ -4,12 +4,12 @@ Use coco json format
 # folder structure
 
                 /dataset
-                |---/train
-                |---/---/images
-                |---/---/labels.json
-                |---/valid
-                |---/---/images
-                |---/---/labels.json
+                |-------/train
+                |-------/-----/images
+                |-------/-----/labels.json
+                |-------/valid
+                |-------/-----/images
+                |-------/-----/labels.json
 
 # labels.json
 
