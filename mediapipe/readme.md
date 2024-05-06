@@ -3,13 +3,13 @@ Use coco json format
 
 # folder structure
 
-/dataset
-|---/train
-|---/---/images
-|---/---/labels.json
-|---/valid
-|---/---/images
-|---/---/labels.json
+                /dataset
+                |---/train
+                |---/---/images
+                |---/---/labels.json
+                |---/valid
+                |---/---/images
+                |---/---/labels.json
 
 # labels.json
 
