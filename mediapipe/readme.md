@@ -1,7 +1,10 @@
 Use coco json format 
 
+# coco format
 
-# folder structure
+convert others format to coco format, then use mediapipe to train
+
+### folder structure
 
                 /dataset
                 |-------/train
@@ -11,7 +14,7 @@ Use coco json format
                 |-------/-----/images
                 |-------/-----/labels.json
 
-# labels.json
+### labels.json
 
                 {
                     "images":[{"id":0,"file_name":"0.jpg"}, ...],
@@ -19,7 +22,7 @@ Use coco json format
                     "categories":[{"id":1,"name":"B"},...]
                 }
 
-# han nom dir stuct
+# chu nom dir stuct
 
 download zip 
 
@@ -45,7 +48,7 @@ extract
 
                 /work/llm/Ner_Llm_Gpt/mediapipe/hannomdataset 
 
-# han nom train , predict
+# chu nom train , predict
 
                 python train.py
                 python inference.py
