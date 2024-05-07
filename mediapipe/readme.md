@@ -57,5 +57,11 @@ extract
 # chu nom train , predict
 
                 python train.py
+
+after train done: model will save to : /work/llm/Ner_Llm_Gpt/mediapipe/exported_model
+
                 python inference.py
+
+
+![image](https://github.com/badpaybad/Ner_Llm_Gpt/blob/main/mediapipe/detected.jpg)
 
