@@ -126,17 +126,19 @@ spec = object_detector.SupportedModels.MOBILENET_MULTI_AVG
 hparams = object_detector.HParams(
     learning_rate=0.1,
     batch_size=16,
-    epochs=1000,
+    epochs=2000,
     export_dir='exported_model')
 options = object_detector.ObjectDetectorOptions(
     supported_model=spec,
     hparams=hparams
 )
 
+
 model = object_detector.ObjectDetector.create(
     train_data=train_data,
     validation_data=validation_data,
-    options=options)
+    options=options,
+    )
 
 loss, coco_metrics = model.evaluate(validation_data, batch_size=1)
 print(f"Validation loss: {loss}")
@@ -146,6 +148,8 @@ finalmodel = model.export_model()
 print(finalmodel)
 
 
+
+"""for cpu"""
 # qat_hparams = object_detector.QATHParams(learning_rate=0.3, batch_size=4, epochs=10, decay_steps=6, decay_rate=0.96)
 # model.quantization_aware_training(train_data, validation_data, qat_hparams=qat_hparams)
 # qat_loss, qat_coco_metrics = model.evaluate(validation_data)

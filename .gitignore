@@ -193,3 +193,4 @@ mediapipe/exported_model/**
 **/train-val/**
 **/hannomdataset/**
 **/chunomdataset/**
+**/exported_model_1000epoch/**
