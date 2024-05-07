@@ -52,7 +52,7 @@ extract
 
                 will create coco dataset 
 
-                /work/llm/Ner_Llm_Gpt/mediapipe/hannomdataset 
+                /work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset 
 
 # chu nom train , predict
 

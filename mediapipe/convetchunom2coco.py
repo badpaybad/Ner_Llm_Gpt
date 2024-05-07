@@ -4,7 +4,7 @@ import os
 import cv2
 import shutil
 import json
-sourceHanNomFolder = "/work/llm/Ner_Llm_Gpt/mediapipe/train-val"
+sourceChuNomFolder = "/work/llm/Ner_Llm_Gpt/mediapipe/train-val"
 
 # class x center y center width height
 # ./wb_localization_dataset/labels/val/nlvnpf-0137-01-045.txt
@@ -38,21 +38,21 @@ def create_directory_if_not_exists(directory):
         print(f"Directory '{directory}' already exists.")
 
 
-cocoHanNomFolder = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset"
-cocoHanNomFolderTrain = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset/train"
-cocoHanNomFolderValid = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset/valid"
-cocoHanNomFolderTrainImages = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset/train/images"
-cocoHanNomFolderValidImages = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset/valid/images"
-create_directory_if_not_exists(cocoHanNomFolder)
-create_directory_if_not_exists(cocoHanNomFolderTrain)
-create_directory_if_not_exists(cocoHanNomFolderValid)
-create_directory_if_not_exists(cocoHanNomFolderTrainImages)
-create_directory_if_not_exists(cocoHanNomFolderValidImages)
+cocoChuNomFolder = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset"
+cocoChuNomFolderTrain = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset/train"
+cocoChuNomFolderValid = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset/valid"
+cocoChuNomFolderTrainImages = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset/train/images"
+cocoChuNomFolderValidImages = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset/valid/images"
+create_directory_if_not_exists(cocoChuNomFolder)
+create_directory_if_not_exists(cocoChuNomFolderTrain)
+create_directory_if_not_exists(cocoChuNomFolderValid)
+create_directory_if_not_exists(cocoChuNomFolderTrainImages)
+create_directory_if_not_exists(cocoChuNomFolderValidImages)
 
-copy_files(f"{sourceHanNomFolder}/wb_localization_dataset/images/train",
-           cocoHanNomFolderTrainImages)
-copy_files(f"{sourceHanNomFolder}/wb_localization_dataset/images/val",
-           cocoHanNomFolderValidImages)
+copy_files(f"{sourceChuNomFolder}/wb_localization_dataset/images/train",
+           cocoChuNomFolderTrainImages)
+copy_files(f"{sourceChuNomFolder}/wb_localization_dataset/images/val",
+           cocoChuNomFolderValidImages)
 
 
 def get_file_name_without_extension(file_path):
@@ -67,7 +67,7 @@ def center_to_corner(x, y, w, h, imgW, imgH):
     return int((x-w/2)*imgW), int((y-h/2)*imgH), int((x+w/2)*imgW), int((y+h/2)*imgH)
 
 
-def convert(dir_labels_train=f"{sourceHanNomFolder}/wb_localization_dataset/labels/train", cocoDirImages=cocoHanNomFolderTrainImages, cocoJsonFile=cocoHanNomFolderTrain):
+def convert(dir_labels_train=f"{sourceChuNomFolder}/wb_localization_dataset/labels/train", cocoDirImages=cocoChuNomFolderTrainImages, cocoJsonFile=cocoChuNomFolderTrain):
 
     catid = 1
     images = []
@@ -129,8 +129,8 @@ def convert(dir_labels_train=f"{sourceHanNomFolder}/wb_localization_dataset/labe
         file.write(text)
 
 
-convert(f"{sourceHanNomFolder}/wb_localization_dataset/labels/train",
-        cocoHanNomFolderTrainImages, cocoHanNomFolderTrain)
+convert(f"{sourceChuNomFolder}/wb_localization_dataset/labels/train",
+        cocoChuNomFolderTrainImages, cocoChuNomFolderTrain)
 
-convert(f"{sourceHanNomFolder}/wb_localization_dataset/labels/val",
-        cocoHanNomFolderValidImages, cocoHanNomFolderValid)
+convert(f"{sourceChuNomFolder}/wb_localization_dataset/labels/val",
+        cocoChuNomFolderValidImages, cocoChuNomFolderValid)
