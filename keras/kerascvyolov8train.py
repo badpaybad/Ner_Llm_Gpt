@@ -117,9 +117,9 @@ requirements of your dataset.
 """
 
 SPLIT_RATIO = 0.2
-BATCH_SIZE = 4
+BATCH_SIZE = 16
 LEARNING_RATE = 0.001
-EPOCH = 5
+EPOCH = 1000
 GLOBAL_CLIPNORM = 10.0
 
 """
@@ -686,7 +686,7 @@ class EvaluateCOCOMetricsCallback(keras.callbacks.Callback):
         for batch in self.data:
             images, y_true = batch[0], batch[1]
             
-            print("on_epoch_end",images)
+            # print("on_epoch_end",images)
             
             y_pred = self.model.predict(images, verbose=0)
             self.metrics.update_state(y_true, y_pred)
@@ -712,7 +712,7 @@ class EvaluateCOCOMetricsCallback(keras.callbacks.Callback):
 yolo.fit(
     train_ds,
     validation_data=val_ds,
-    epochs=1,
+    epochs=EPOCH,
     callbacks=[EvaluateCOCOMetricsCallback(val_ds, "model.keras")],
 )
 
