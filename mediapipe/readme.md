@@ -59,3 +59,6 @@ extract
                 python train.py
                 python inference.py
 
+
+![image](https://github.com/badpaybad/Ner_Llm_Gpt/blob/main/mediapipe/detected.jpg)
+
