@@ -28,7 +28,7 @@ convert others format to coco format, then use mediapipe to train
                 pip3 install mediapipe mediapipe_model_maker 
                 pip3 install opencv-python opencv-contrib-python
 
-# chu nom dir stuct
+# chu nom dir struct
 
 download zip 
 
