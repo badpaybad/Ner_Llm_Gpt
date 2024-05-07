@@ -4,15 +4,20 @@
 # https://github.com/google-edge-ai/mediapipe-samples/blob/main/examples/customization/object_detector.ipynb
 # sudo apt-get install python3-tk
 # pip install ipympl
+import tensorflow as tf
+import json
+import os
+from mediapipe_model_maker import object_detector
+import numpy as np
+import matplotlib.rcsetup as rcsetup
 import math
 from collections import defaultdict
 from matplotlib import patches, text, patheffects
 import matplotlib.pyplot as plt
 import matplotlib
 print(matplotlib.matplotlib_fname())
-import matplotlib.rcsetup as rcsetup
 print(rcsetup.all_backends)
-guibackend="Qt5Agg"
+guibackend = "Qt5Agg"
 matplotlib.use(guibackend)
 plt.switch_backend(guibackend)
 # # plt.style.use('ggplot')
@@ -21,7 +26,6 @@ matplotlib.rcParams['backend'] = guibackend
 print(f"Interactive mode: {matplotlib.is_interactive()}")
 print(f"matplotlib backend: {matplotlib.rcParams['backend']}")
 
-import numpy as np
 
 # # Generate a random image
 # image = np.random.rand(100, 100)
@@ -31,14 +35,10 @@ import numpy as np
 # plt.show()
 
 # pip install -U jaxlib==0.4.12
-from mediapipe_model_maker import object_detector
-import os
-import json
-import tensorflow as tf
 assert tf.__version__.startswith('2')
 
-train_dataset_path = "/work/llm/Ner_Llm_Gpt/mediapipe/hannomdataset/train"
-validation_dataset_path="/work/llm/Ner_Llm_Gpt/mediapipe/hannomdataset/valid"
+train_dataset_path = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset/train"
+validation_dataset_path = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset/valid"
 
 with open(os.path.join(train_dataset_path, "labels.json"), "r") as f:
     labels_json = json.load(f)
@@ -59,7 +59,7 @@ def draw_box(ax, bb):
 
 def draw_text(ax, bb, txt, disp):
     text = ax.text(bb[0], (bb[1]-disp), txt, verticalalignment='top',
-                color='white', fontsize=10, weight='bold')
+                   color='white', fontsize=10, weight='bold')
     draw_outline(text)
 
 
@@ -71,16 +71,17 @@ def draw_bbox(ax, annotations_list, id_to_label, image_shape):
         draw_text(ax, bbox, id_to_label[cat_id], image_shape[0] * 0.05)
 
 
-def visualize(dataset_folder, max_examples=None):    
-    
-    guibackend="Qt5Agg"
+def visualize(dataset_folder, max_examples=None):
+
+    guibackend = "Qt5Agg"
     matplotlib.use(guibackend)
     plt.switch_backend(guibackend)
-    
+
     with open(os.path.join(dataset_folder, "labels.json"), "r") as f:
         labels_json = json.load(f)
     images = labels_json["images"]
-    cat_id_to_label = {item["id"]: item["name"] for item in labels_json["categories"]}
+    cat_id_to_label = {item["id"]: item["name"]
+                       for item in labels_json["categories"]}
     image_annots = defaultdict(list)
     for annotation_obj in labels_json["annotations"]:
         image_id = annotation_obj["image_id"]
@@ -96,12 +97,13 @@ def visualize(dataset_folder, max_examples=None):
         img = plt.imread(os.path.join(
             dataset_folder, "images", images[image_id]["file_name"]))
         ax.imshow(img)
-        draw_bbox(ax, annotations_list, cat_id_to_label, img.shape)       
+        draw_bbox(ax, annotations_list, cat_id_to_label, img.shape)
         # print(ax)
         # plt.imshow(img,cmap="gray")
-    
-    # plt.colorbar() 
+
+    # plt.colorbar()
     plt.show()
+
 
 """
 test GUI backend 
@@ -111,19 +113,21 @@ python3 -c "from tkinter import Tk; Tk().mainloop()"
 """
 
 # visualize(train_dataset_path, 9)
-train_data = object_detector.Dataset.from_coco_folder(train_dataset_path)#, cache_dir="/tmp/od_data/train")
-validation_data = object_detector.Dataset.from_coco_folder(validation_dataset_path)#, cache_dir="/tmp/od_data/validation")
+train_data = object_detector.Dataset.from_coco_folder(
+    train_dataset_path)  # , cache_dir="/tmp/od_data/train")
+validation_data = object_detector.Dataset.from_coco_folder(
+    validation_dataset_path)  # , cache_dir="/tmp/od_data/validation")
 print("train_data size: ", train_data.size)
 print("validation_data size: ", validation_data.size)
 
 spec = object_detector.SupportedModels.MOBILENET_MULTI_AVG
 # spec = object_detector.SupportedModels.MOBILENET_V2
-#https://developers.google.com/mediapipe/api/solutions/python/mediapipe_model_maker/object_detector/SupportedModels
-hparams = object_detector.HParams( 
-    learning_rate = 0.3,
-    batch_size = 16,
-    epochs = 100,
-export_dir='exported_model')
+# https://developers.google.com/mediapipe/api/solutions/python/mediapipe_model_maker/object_detector/SupportedModels
+hparams = object_detector.HParams(
+    learning_rate=0.1,
+    batch_size=16,
+    epochs=1000,
+    export_dir='exported_model')
 options = object_detector.ObjectDetectorOptions(
     supported_model=spec,
     hparams=hparams
@@ -140,7 +144,6 @@ print(f"Validation coco metrics: {coco_metrics}")
 
 finalmodel = model.export_model()
 print(finalmodel)
-
 
 
 # qat_hparams = object_detector.QATHParams(learning_rate=0.3, batch_size=4, epochs=10, decay_steps=6, decay_rate=0.96)

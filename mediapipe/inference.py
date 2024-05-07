@@ -60,7 +60,7 @@ detector = vision.ObjectDetector.create_from_options(options)
 # STEP 3: Load the input image.
 image = mp.Image.create_from_file(
     # "/home/dunp/Downloads/android_figurine/train/images/IMG_0509.jpg"
-    #"/work/cloud/cloud.mldlai/test/new.jpg.txt.jpg"
+    # "/work/cloud/cloud.mldlai/test/new.jpg.txt.jpg"
     "/work/llm/Ner_Llm_Gpt/mediapipe/nlvnpf-0137-01-045.jpg"
 )
 

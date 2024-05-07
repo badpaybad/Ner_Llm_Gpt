@@ -21,6 +21,12 @@ convert others format to coco format, then use mediapipe to train
                     "annotations":[{"image_id":0,"bbox":[196,151,27,35],"category_id":1}, ...],
                     "categories":[{"id":1,"name":"B"},...]
                 }
+# pip install
+
+
+                sudo apt install libgtk2.0-dev pkg-config
+                pip3 install mediapipe mediapipe_model_maker 
+                pip3 install opencv-python opencv-contrib-python
 
 # chu nom dir stuct
 
