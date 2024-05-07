@@ -48,7 +48,7 @@ extract
                 |---------/------/val
 
 
-                python convethannom2coco.py
+                python convetchunom2coco.py
 
                 will create coco dataset 
 
