@@ -697,7 +697,7 @@ class EvaluateCOCOMetricsCallback(keras.callbacks.Callback):
         current_map = metrics["MaP"]
         if current_map > self.best_map:
             self.best_map = current_map
-            self.model.save(self.save_path)  # Save the model when mAP improves
+            self.model.save(f"{self.save_path}.{epoch}.keras")  # Save the model when mAP improves
 
         return logs
 

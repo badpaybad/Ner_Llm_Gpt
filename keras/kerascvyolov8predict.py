@@ -1,10 +1,18 @@
 from keras.models import load_model
 import tensorflow  as tf
 
-import keras_cv
+import keras_cv,io
 
 # Load the YOLOv8 model from the .h5 file
 model = load_model('model.keras')
+
+## if you want to use fastapi then upload image 
+# @webApp.post("/apis/vectorimage")
+# async def vectorimage(image: UploadFile = File(...)):
+
+#     imgbuff1 = await image.read()
+#     bytes_object = io.BytesIO(imgbuff1).getvalue()
+#     tensor_data = tf.io.read_file(bytes_object)
 
 def load_image(image_path):
     image = tf.io.read_file(image_path)
