@@ -7,6 +7,7 @@
 import tensorflow as tf
 import json
 import os
+import mediapipe_model_maker
 from mediapipe_model_maker import object_detector
 import numpy as np
 import matplotlib.rcsetup as rcsetup
