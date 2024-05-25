@@ -1,16 +1,28 @@
-FROM rocm-vistral7b-base
+# FROM rocm-vistral7b-base
+FROM  nvidia/cuda:12.4.1-devel-ubuntu22.04 
 USER root
 WORKDIR /app
 
-ENV HCC_AMDGPU_TARGET "gfx1103"
-ENV HSA_OVERRIDE_GFX_VERSION "11.0.0"
-ENV HIP_VISIBLE_DEVICES "0"
+# ENV HCC_AMDGPU_TARGET "gfx1103"
+# ENV HSA_OVERRIDE_GFX_VERSION "11.0.0"
+# ENV HIP_VISIBLE_DEVICES "0"
+# cp -r /home/emas_ops/llm/Vistral-7B-Chat /home/emas_ops/llm/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat
 COPY /main.py /app/main.py
-COPY /testrocm.py /app/testrocm.py
+# COPY /testrocm.py /app/testrocm.py
+COPY /Vistral-7B-Chat /app/Vistral-7B-Chat
 
-EXPOSE 8080
+EXPOSE 8880
 
-CMD [ "python3", "main.py","8080","cuda"]
+CMD [ "python3", "main.py","8880","cuda"]
+
+
+# sudo docker build -f dockerfile -t llama-vistral7b-gpu .
+
+# sudo docker run --user root --privileged -d --restart always --gpus all -p 8880:8880 --name llama-vistral7b-gpu_8880 llama-vistral7b-gpu
+
+# sudo docker rm -f llama-vistral7b-gpu_8880
+# sudo docker rmi -f llama-vistral7b-gpu
+
 
 #sudo apt update && sudo apt install -y git python3-pip python3-venv python3-dev libstdc++-12-dev 
 #docker build -f dockerfile -t rocm-vistral7b .

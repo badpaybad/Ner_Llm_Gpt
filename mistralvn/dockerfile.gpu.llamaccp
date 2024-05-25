@@ -26,6 +26,11 @@ CMD [ "/bin/sh", "-c", "./bin/server -m '/app/Vistral-7B-Chat.gguf' -c 2048 --ho
 
 # sudo docker rm -f llama-vistral7b-gpu_8880
 
+# sudo docker inspect llama-vistral7b-gpu_8880
+# sudo docker inspect --format='{{.State.Status}}' llama-vistral7b-gpu_8880
+
+# sudo docker rmi -f llama-vistral7b-gpu
+
 
 #./server -m "/work/llm/llama.cpp/Vistral-7B-Chat.gguf" -c 2048
 
