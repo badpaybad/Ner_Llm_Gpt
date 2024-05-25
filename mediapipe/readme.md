@@ -25,8 +25,8 @@ convert others format to coco format, then use mediapipe to train
 
 
                 sudo apt install libgtk2.0-dev pkg-config
-                pip3 install mediapipe mediapipe_model_maker 
-                pip3 install opencv-python opencv-contrib-python
+                pip3 install -U tensorflow mediapipe mediapipe_model_maker  PyQt5
+                pip3 install -U opencv-python opencv-contrib-python 
 
 # chu nom dir struct
 
