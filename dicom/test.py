@@ -1,7 +1,7 @@
 import pydicom
 
 # Specify the path to your DICOM file
-dicom_file_path = "Altea_t1_sag_tse_DR_77233508.dcm"
+dicom_file_path = "Vida_Knee.MR.Comp_DR-Gain_DR.1005.1.2021.04.27.14.44.20.58.57125557.dcm"
 
 # Read the DICOM file
 ds = pydicom.dcmread(dicom_file_path)

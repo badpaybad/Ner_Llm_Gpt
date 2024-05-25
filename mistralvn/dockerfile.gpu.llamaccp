@@ -14,11 +14,17 @@ ENV CUDA_DOCKER_ARCH=all
 ENV LC_ALL=C.utf8
 CMD [ "/bin/sh", "-c", "./bin/server -m '/app/Vistral-7B-Chat.gguf' -c 2048 --host 0.0.0.0 --port 8880"]
 
+
+# sudo apt-get install --reinstall nvidia-container-toolkit
+# sudo systemctl restart docker
+
 # "/work/llm/Ner_Llm_Gpt/mistralvn/bin.gpu/server" -m '/work/llm/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat.gpu.gguf' -c 2048 --host 0.0.0.0 --port 8880
 
 # sudo docker build -f dockerfile.gpu.llamaccp -t llama-vistral7b-gpu .
 
 # sudo docker run --user root --privileged -d --restart always --gpus all -p 11111:8880 --name llama-vistral7b-gpu_8880 llama-vistral7b-gpu
+
+# sudo docker rm -f llama-vistral7b-gpu_8880
 
 
 #./server -m "/work/llm/llama.cpp/Vistral-7B-Chat.gguf" -c 2048
