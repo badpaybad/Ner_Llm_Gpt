@@ -22,6 +22,9 @@ CMD [ "python3", "main.py","8880","cuda"]
 
 # sudo docker rm -f llama-vistral7b-gpu_8880
 # sudo docker rmi -f llama-vistral7b-gpu
+# sudo docker inspect --format='{{.State.Status}}' llama-vistral7b-gpu_8880
+
+# sudo docker logs -f --tail 10 llama-vistral7b-gpu_8880
 
 
 #sudo apt update && sudo apt install -y git python3-pip python3-venv python3-dev libstdc++-12-dev 

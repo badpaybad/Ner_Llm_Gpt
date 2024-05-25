@@ -50,7 +50,7 @@ print(f"CUDA version: {torch.version.cuda} (Should be \"None\")")
 print(f"HIP version: {torch.version.hip} (Should contain value)")
 
 print(f"torch.cuda.is_available(): {torch.cuda.is_available()}")
-
+# print(torch.cuda.memory_summary())
 
 class Message(BaseModel):
     role: str
