@@ -141,13 +141,13 @@ ln -s /var/lib/dkms/amdgpu/6.3.6-1739731.22.04/source /var/lib/dkms/amdgpu/6.3.6
 # "summary":"tóm tắt đoạn văn"
 # }
 # """
-
+modelpath="/mldlai/Vistral-7B-Chat"
 tokenizer = AutoTokenizer.from_pretrained('Vistral-7B-Chat')
 model = AutoModelForCausalLM.from_pretrained(
     'Vistral-7B-Chat',
     torch_dtype=torch.bfloat16,  # change to torch.float16 if you're using V100
     device_map=device_type,
-    use_cache=True,
+    use_cache=False,
 )
 
 conversation = [{"role": "system", "content": system_prompt}]
