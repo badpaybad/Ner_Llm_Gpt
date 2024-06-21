@@ -23,6 +23,7 @@ import uvicorn
 from pydantic import BaseModel
 from typing import List, Optional
 import torch
+
 # pip3 install -U torch==1.8.1 torchvision==0.9.1 torchaudio==0.8.1 --index-url https://download.pytorch.org/whl/cpu
 
 # pip3 install install torch==2.1.0+cpu torchvision==0.16.0 torchaudio==2.1.0  --index-url https://download.pytorch.org/whl/cpu
@@ -45,20 +46,47 @@ os.environ["PYTORCH_HIP_ALLOC_CONF"] = "expandable_segments:True"
 # os.environ["HCC_AMDGPU_TARGET"] = "gfx1103"
 # os.environ["HSA_OVERRIDE_GFX_VERSION"] = "11.0.0"
 
-print(f"CUDA support: {torch.cuda.is_available()} (Should be \"True\")")
-print(f"CUDA version: {torch.version.cuda} (Should be \"None\")")
+print(f'CUDA support: {torch.cuda.is_available()} (Should be "True")')
+print(f'CUDA version: {torch.version.cuda} (Should be "None")')
 print(f"HIP version: {torch.version.hip} (Should contain value)")
 
 print(f"torch.cuda.is_available(): {torch.cuda.is_available()}")
 # print(torch.cuda.memory_summary())
 
+
+class EmbeddingRequest(BaseModel):
+    input: str
+    encoding_format: "float"
+    model: str = ""
+
+
+class Embedding(BaseModel):
+    object: str = "embedding"
+    embedding: List[float]
+    index: int = 0
+
+
+class Usage(BaseModel):
+    prompt_tokens: int = 0
+    total_tokens: int = 0
+    completion_tokens: int = 0
+
+
+class EmbeddingResponse(BaseModel):
+    object: str="List"
+    data: List[Embedding]
+    model: str
+    usage: Usage
+
+
 class Message(BaseModel):
     role: str
     content: str
 
+
 class ConversationRequest(BaseModel):
     conversationid: str = f"{uuid.uuid4()}"
-    
+
 
 class ChatRequest(BaseModel):
     model: str = "Vistral-7B-Chat"
@@ -141,11 +169,11 @@ ln -s /var/lib/dkms/amdgpu/6.3.6-1739731.22.04/source /var/lib/dkms/amdgpu/6.3.6
 # "summary":"tóm tắt đoạn văn"
 # }
 # """
-modelpath="/mldlai/Vistral-7B-Chat"
-tokenizer = AutoTokenizer.from_pretrained('Vistral-7B-Chat')
+modelpath = "/mldlai/Vistral-7B-Chat"
+tokenizer = AutoTokenizer.from_pretrained(modelpath)
 model = AutoModelForCausalLM.from_pretrained(
-    'Vistral-7B-Chat',
-    torch_dtype=torch.bfloat16,  # change to torch.float16 if you're using V100
+    modelpath,
+    # torch_dtype=torch.bfloat16,  # change to torch.float16 if you're using V100
     device_map=device_type,
     use_cache=False,
 )
@@ -176,8 +204,7 @@ isExist_static = os.path.exists(folder_static)
 if not isExist_static:
     os.makedirs(folder_static)
 
-webApp.mount(folder_static, StaticFiles(
-    directory=folder_static), name="static")
+webApp.mount(folder_static, StaticFiles(directory=folder_static), name="static")
 
 webApp.add_middleware(
     CORSMiddleware,
@@ -194,21 +221,18 @@ conversation_sessions = {}
 async def llm_get(conversationid: str = Form(f"{uuid.uuid4()}")):
     uuid.UUID(conversationid)
     if conversationid not in conversation_sessions.keys():
-        return {
-            "ok": 0,
-            "history": []
-        }
+        return {"ok": 0, "history": []}
 
-    return {
-        "ok": 1,
-        "history": conversation_sessions[conversationid]
-    }
+    return {"ok": 1, "history": conversation_sessions[conversationid]}
     pass
 
 
 @webApp.post("/apis/llm/ask")
-async def llm_ask(msg: str = Form(None), conversationid: str = Form(f"{uuid.uuid4()}"),
-                  systemguideline: str = Form(system_prompt),):
+async def llm_ask(
+    msg: str = Form(None),
+    conversationid: str = Form(f"{uuid.uuid4()}"),
+    systemguideline: str = Form(system_prompt),
+):
     uuid.UUID(conversationid)
     conversation = []
     if conversationid not in conversation_sessions.keys():
@@ -224,8 +248,9 @@ async def llm_ask(msg: str = Form(None), conversationid: str = Form(f"{uuid.uuid
     t1 = datetime.datetime.now().timestamp()
     conversation.append({"role": "user", "content": msg})
 
-    input_ids = tokenizer.apply_chat_template(
-        conversation, return_tensors="pt").to(model.device)
+    input_ids = tokenizer.apply_chat_template(conversation, return_tensors="pt").to(
+        model.device
+    )
     out_ids = model.generate(
         input_ids=input_ids,
         # max_new_tokens=768,
@@ -238,42 +263,82 @@ async def llm_ask(msg: str = Form(None), conversationid: str = Form(f"{uuid.uuid
         repetition_penalty=1.05,
     )
     assistant = tokenizer.batch_decode(
-        out_ids[:, input_ids.size(1):], skip_special_tokens=True)[0].strip()
+        out_ids[:, input_ids.size(1) :], skip_special_tokens=True
+    )[0].strip()
     conversation.append({"role": "assistant", "content": assistant})
 
     conversation_sessions[conversationid] = conversation
     t2 = datetime.datetime.now().timestamp()
-    return {
-        "ok": 1,
-        "content": assistant,
-        "elapsed": t2-t1
-    }
+    return {"ok": 1, "content": assistant, "elapsed": t2 - t1}
 
     pass
 
+
 conversation_sessions_gpt_similar = {}
+
 
 @webApp.post("/api/chat/get")
 async def llm_chat_get(request: ConversationRequest):
     if request.conversationid in conversation_sessions_gpt_similar.keys():
-        return conversation_sessions_gpt_similar[request.conversationid] 
+        return conversation_sessions_gpt_similar[request.conversationid]
         pass
-    
+
     return []
 
-@webApp.post("/api/chat/completion")
+
+@webApp.post("/v1/embeddings")
+async def llm_embedin(request: EmbeddingRequest):
+
+    inputs = tokenizer(request.input, return_tensors="pt")
+
+    # Generate embeddings
+    with torch.no_grad():
+        outputs = model(**inputs, output_hidden_states=True)
+        embeddings = outputs.hidden_states[-1]
+
+    embedding = torch.mean(embeddings, dim=1).squeeze().numpy().tolist()
+        
+        # Create an Embedding instance
+    embedding_instance = Embedding(
+        object="embedding",
+        embedding=embedding,
+        index=0
+    )
+
+    # Create a Usage instance
+    usage_instance = Usage(
+        prompt_tokens=0,
+        total_tokens=0
+    )
+
+
+        # Create an EmbeddingResponse instance
+    embedding_response = EmbeddingResponse(
+        object="list",
+        data=[embedding_instance],
+        model="text-embedding-ada-002",
+        usage=usage_instance
+    )
+
+
+    return embedding_response
+    pass
+
+
+@webApp.post("v1/chat/completions")
 async def llm_chat_completion(request: ChatRequest):
     print("request-----------B")
     print(request)
     print("request-----------E")
-    t1 = datetime.datetime.now().timestamp()*1000
+    t1 = datetime.datetime.now().timestamp() * 1000
 
     if request.conversationid not in conversation_sessions_gpt_similar.keys():
         conversation_sessions_gpt_similar[request.conversationid] = request
         pass
-    
-    input_ids = tokenizer.apply_chat_template(
-        request.messages, return_tensors="pt").to(model.device)
+
+    input_ids = tokenizer.apply_chat_template(request.messages, return_tensors="pt").to(
+        model.device
+    )
     out_ids = model.generate(
         input_ids=input_ids,
         # max_new_tokens=768,
@@ -286,7 +351,8 @@ async def llm_chat_completion(request: ChatRequest):
         repetition_penalty=request.repetition_penalty,
     )
     assistants = tokenizer.batch_decode(
-        out_ids[:, input_ids.size(1):], skip_special_tokens=request.skip_special_tokens)
+        out_ids[:, input_ids.size(1) :], skip_special_tokens=request.skip_special_tokens
+    )
 
     choices = []
     for idx, assistant in enumerate(assistants):
@@ -295,11 +361,7 @@ async def llm_chat_completion(request: ChatRequest):
         msg = Message(role="assistant", content=assistant.strip())
 
         request.messages.append(msg)
-        choice = Choice(
-            message=msg,
-            finish_reason="stop",
-            index=idx
-        )
+        choice = Choice(message=msg, finish_reason="stop", index=idx)
         choices.append(choice)
 
     conversation_sessions_gpt_similar[request.conversationid] = request
@@ -308,7 +370,7 @@ async def llm_chat_completion(request: ChatRequest):
     response_object = "chat.completion"
     response_created = int(datetime.datetime.utcnow().timestamp())
 
-    t2 = datetime.datetime.now().timestamp()*1000
+    t2 = datetime.datetime.now().timestamp() * 1000
 
     chat_response = ChatResponse(
         id=response_id,
@@ -319,7 +381,7 @@ async def llm_chat_completion(request: ChatRequest):
         conversationid=request.conversationid,
         tools=None,
         requestid=request.requestid,
-        elapsed_in_milis=t2-t1
+        elapsed_in_milis=t2 - t1,
     )
 
     return chat_response
