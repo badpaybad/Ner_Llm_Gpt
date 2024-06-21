@@ -11,6 +11,9 @@
 
                 to folder : "/work/llm/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat"
 
+                git lfs fetch --all
+
+
 2. clone llamacpp: git clone https://github.com/ggerganov/llama.cpp.git
 
 Open terminal , go to inside foler llama.cpp
