@@ -23,7 +23,7 @@ base workflow:
 
                 User prompt -> call to system use KB RAG to get System prompt -> feed System prompt to LLM -> Assitance prompt -> system process Assitance prompt -> feed User propmt to LLM -> Assitance prompt -> display text to user
 
-# how we build KB, RAG 
+## how we build KB, RAG 
 
 text vector base on https://huggingface.co/Viet-Mistral/Vistral-7B-Chat
 
@@ -31,14 +31,14 @@ text vector base on https://huggingface.co/Viet-Mistral/Vistral-7B-Chat
 
 mongodb to store vector
 
-# Embebding and LLM model 
+## Embebding and LLM model 
 
 use LLM to generate text base on https://huggingface.co/Viet-Mistral/Vistral-7B-Chat 
 
                 mistralvn/Vistral-7B-Chat
                 mistralvn/main.py
 
-# BE (Backend) Expose API to FE (Frontend)
+## BE (Backend) Expose API to FE (Frontend)
 
                 Python: https://www.w3schools.com/python/
                 Fastapi https://fastapi.tiangolo.com/tutorial/
@@ -48,16 +48,16 @@ use LLM to generate text base on https://huggingface.co/Viet-Mistral/Vistral-7B-
                 or
                 C# asp.net core
 
-# FE web
+## FE web
 
                 Html, js, css
 
-# FE mobi app
+## FE mobi app
 
                 Flutter
 
 
-# dockercompose db
+## dockercompose db
 
 https://www.docker.com/products/docker-desktop/
 
