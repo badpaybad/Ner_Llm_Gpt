@@ -37,10 +37,17 @@ use LLM to generate text
                 mistralvn/Vistral-7B-Chat
                 mistralvn/main.py
 
-# Expose API to FE (frontend)
+# BE (Backend) Expose API to FE (Frontend)
 
-                App mobi
-                Web app
+                Fastapi
+                or
+                C# asp.net core
 
+# FE web
 
+                Html, js, css
+
+# FE mobi app
+
+                Flutter
 
