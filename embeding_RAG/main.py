@@ -1,9 +1,9 @@
-from transformers import LlamaTokenizer, LlamaModel
+from transformers import LlamaTokenizer, LlamaModel, Qwen2Model, Qwen2Tokenizer
 import torch
 
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-modelpath = "/mldlai/Vistral-7B-Chat"
+modelpath = "/mldlai/Qwen1.5-4B-Chat"
 
 def llama():
     # Load the tokenizer and model
@@ -55,7 +55,7 @@ def transfromAutoMl():
     pass
 
 
-llama()
+# llama()
 transfromAutoMl()
 
 
