@@ -44,6 +44,7 @@ use LLM to generate text base on https://huggingface.co/Viet-Mistral/Vistral-7B-
                 Fastapi https://fastapi.tiangolo.com/tutorial/
                 Mongodb python: https://www.w3schools.com/python/python_mongodb_getstarted.asp 
                 Docker db mongo: https://hub.docker.com/_/mongo
+                Tool connect mongodb: https://www.mongodb.com/products/tools/compass 
                 or
                 C# asp.net core
 
