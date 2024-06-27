@@ -56,3 +56,23 @@ use LLM to generate text base on https://huggingface.co/Viet-Mistral/Vistral-7B-
 
                 Flutter
 
+
+# dockercompose db
+
+https://www.docker.com/products/docker-desktop/
+
+docker compose -f "docker-compose-db.yml" -p "db" up -d
+
+                services:
+                      mongodb6:
+                        # user: root
+                        #https://hub.docker.com/_/mongo
+                        image: mongo:6
+                        restart: always
+                        ports:
+                            - 27017:27017
+                        volumes:
+                            - /home/dunp/docker/mongo6:/data/db
+                        environment:
+                            - MONGO_INITDB_ROOT_USERNAME=YourName
+                            - MONGO_INITDB_ROOT_PASSWORD=YourPass@Somesecret
