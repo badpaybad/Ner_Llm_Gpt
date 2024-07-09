@@ -53,7 +53,6 @@ print(f"HIP version: {torch.version.hip} (Should contain value)")
 print(f"torch.cuda.is_available(): {torch.cuda.is_available()}")
 # print(torch.cuda.memory_summary())
 
-
 class EmbeddingRequest(BaseModel):
     input: str
     encoding_format: "float"
@@ -108,7 +107,6 @@ class Choice(BaseModel):
     finish_reason: Optional[str] = None
     index: int = 0
 
-
 class ChatResponse(BaseModel):
     id: str
     object: str
@@ -131,7 +129,6 @@ if device_type == None or device_type == "":
     device_type = "cpu"
 
 print(f"device_type try to use: {device_type}")
-
 
 # torch.cuda.empty_cache()
 # import gc
@@ -180,12 +177,10 @@ model = AutoModelForCausalLM.from_pretrained(
 
 conversation = [{"role": "system", "content": system_prompt}]
 
-
 # @webApp.on_event("startup")
 # def startup():
 #     print("start")
 #     RunVar("_default_thread_limiter").set(CapacityLimiter(2))
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
