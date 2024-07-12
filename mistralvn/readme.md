@@ -1,3 +1,4 @@
+pip install jiwer gradio typing-extensions fastapi
 
 # Convert huggingface model to gguf and build docker image to run in CPU
 
