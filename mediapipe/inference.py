@@ -86,6 +86,8 @@ check_tflite_in_out_info(base_options.model_asset_path)
 
 check_tflite_in_out_info("/work/llm/Ner_Llm_Gpt/mediapipe/updated_resnet100.tflite")
 
+check_tflite_in_out_info("/work/innovation-ads/innovationads/assets/face_extract_feature/model.tflite")
+
 # # Hypothetical function (not real MediaPipe code)
 # input_shape = detector.get_input_shape()
 # output_shape = detector.get_output_shape()
