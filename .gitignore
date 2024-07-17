@@ -194,3 +194,4 @@ mediapipe/exported_model/**
 **/hannomdataset/**
 **/chunomdataset/**
 **/exported_model_1000epoch/**
+mediapipe/updated_resnet100.tflite

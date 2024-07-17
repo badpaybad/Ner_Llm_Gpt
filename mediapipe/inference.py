@@ -57,6 +57,43 @@ options = vision.ObjectDetectorOptions(base_options=base_options,
                                        score_threshold=0.5)
 detector = vision.ObjectDetector.create_from_options(options)
 
+
+import tensorflow as tf
+#model_path=base_options.model_asset_path
+
+def check_tflite_in_out_info(modelpathfile):
+        
+    print(modelpathfile)
+    # Load the TFLite model
+    interpreter = tf.lite.Interpreter(model_path=modelpathfile)
+    interpreter.allocate_tensors()
+
+    # Get input and output details
+    input_details = interpreter.get_input_details()
+    output_details = interpreter.get_output_details()
+
+    # Print input details
+    for input_detail in input_details:
+        print("Input Shape:", input_detail['shape'])
+        print("Input Type:", input_detail['dtype'])
+
+    # Print output details
+    for output_detail in output_details:
+        print("Output Shape:", output_detail['shape'])
+        print("Output Type:", output_detail['dtype'])
+
+check_tflite_in_out_info(base_options.model_asset_path)
+
+check_tflite_in_out_info("/work/llm/Ner_Llm_Gpt/mediapipe/updated_resnet100.tflite")
+
+# # Hypothetical function (not real MediaPipe code)
+# input_shape = detector.get_input_shape()
+# output_shape = detector.get_output_shape()
+
+# print("Input Shape:", input_shape)
+# print("Output Shape:", output_shape)
+
+
 # STEP 3: Load the input image.
 image = mp.Image.create_from_file(
     # "/home/dunp/Downloads/android_figurine/train/images/IMG_0509.jpg"

@@ -17,3 +17,18 @@ for val in listGroupByVal:
     
 print(listGroupByVal)
 print(listIdxForVal)
+
+def xxx():
+    return ""
+    pass
+    
+class Xxxx:
+    ddd=""
+    def __init__(self, x):
+        self.x = x
+        
+    def kkk():
+        pass
+    
+    
+x=Xxxx()
