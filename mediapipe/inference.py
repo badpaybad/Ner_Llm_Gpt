@@ -100,17 +100,37 @@ image = mp.Image.create_from_file(
     # "/work/cloud/cloud.mldlai/test/new.jpg.txt.jpg"
     "/work/llm/Ner_Llm_Gpt/mediapipe/nlvnpf-0137-01-045.jpg"
 )
-
+print("# STEP 3: Load the input image.")
 # STEP 4: Detect objects in the input image.
 detection_result = detector.detect(image)
-
+print("# STEP 4: Detect objects in the input image.")
 # STEP 5: Process the detection result. In this case, visualize it.
 image_copy = np.copy(image.numpy_view())
 annotated_image = visualize(image_copy, detection_result)
 rgb_annotated_image = cv2.cvtColor(annotated_image, cv2.COLOR_BGR2RGB)
 # cv2.imshow("", rgb_annotated_image)
+print("STEP 5: Process the detection result. In this case, visualize it.")
 
 cv2.imwrite("detected.jpg", rgb_annotated_image)
 
-imgplot = plt.imshow(rgb_annotated_image)
-plt.show()
+print("STEP 6: Save detected image")
+
+cv2.imshow("Image", rgb_annotated_image)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+# import matplotlib
+# import matplotlib.rcsetup as rcsetup
+# print(matplotlib.matplotlib_fname())
+# print(rcsetup.all_backends)
+# guibackend = "Qt5Agg"
+# matplotlib.use(guibackend)
+# plt.switch_backend(guibackend)
+# # # plt.style.use('ggplot')
+
+# matplotlib.rcParams['backend'] = guibackend
+# print(f"Interactive mode: {matplotlib.is_interactive()}")
+# print(f"matplotlib backend: {matplotlib.rcParams['backend']}")
+# imgplot = plt.imshow(rgb_annotated_image, cv2.WINDOW_GUI_EXPANDED)
+# plt.show()
+
