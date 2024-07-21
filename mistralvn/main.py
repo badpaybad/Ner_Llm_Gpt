@@ -311,7 +311,7 @@ async def llm_embedin(request: EmbeddingRequest):
     embedding_response = EmbeddingResponse(
         object="list",
         data=[embedding_instance],
-        model="text-embedding-ada-002",
+        model="vistral-7b",
         usage=usage_instance
     )
 
