@@ -67,10 +67,28 @@ def check_tflite_in_out_info(modelpathfile):
     # Load the TFLite model
     interpreter = tf.lite.Interpreter(model_path=modelpathfile)
     interpreter.allocate_tensors()
-
+    
     # Get input and output details
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
+    
+    # Set the tensor to point to the input data
+    print("-------------------set input random value")
+    # can convert image into input numpy array
+    input_shape = input_details[0]['shape']
+    input_data = np.array(np.random.random_sample(input_shape), dtype=np.float32)
+
+    interpreter.set_tensor(input_details[0]['index'], input_data)
+    
+    print("-------------------inference")
+    interpreter.invoke()    
+        
+    # Extract output data
+    output_data = interpreter.get_tensor(output_details[0]['index'])
+    
+    print("-------------------set output value")    
+    print(output_data.shape)
+    print(output_data)
 
     # Print input details
     for input_detail in input_details:
