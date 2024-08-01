@@ -29,6 +29,7 @@ def llama():
 
     print("llama Embedding shape:", embedding.shape)
     print("Embedding:", embedding)
+    
 
 
 def transfromAutoMl():
