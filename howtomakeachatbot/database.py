@@ -4,7 +4,7 @@ import re
 from bson import ObjectId
 class ChatBotMongoDbContext:
     def __init__(self,):
-        self.myclient= pymongo.MongoClient("mongodb://root:Test%40123456@118.70.117.208:27017/ChatgptMongoDbContext?authMechanism=SCRAM-SHA-1&authSource=admin")
+        self.myclient= pymongo.MongoClient("mongodb://root:123456@localhost:27017/ChatgptMongoDbContext?authMechanism=SCRAM-SHA-1&authSource=admin")
         self.ChatgptMongoDbContext = self.myclient["ChatgptMongoDbContext"]
         self.customersCollection = self.ChatgptMongoDbContext["customers"]
         
