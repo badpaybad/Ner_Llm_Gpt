@@ -195,6 +195,7 @@ mediapipe/exported_model/**
 **/chunomdataset/**
 **/exported_model_1000epoch/**
 mediapipe/updated_resnet100.tflite
+gemma/test.py
 mediapipe/exported_model1/float_ckpt.data-00000-of-00001
 mediapipe/exported_model1/float_ckpt.index
 mediapipe/exported_model1/metadata.json

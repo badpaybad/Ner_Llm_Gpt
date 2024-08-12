@@ -154,6 +154,8 @@ sudo apt install "linux-headers-$(uname -r)" "linux-modules-extra-$(uname -r)"
 
                 https://oauth:...your token..@huggingface.co/Viet-Mistral/Vistral-7B-Chat
 
+                
+
 # XNDA amd npu
 
                 https://github.com/amd/xdna-driver

@@ -79,8 +79,8 @@ class EmbeddingResponse(BaseModel):
 
 
 class Message(BaseModel):
-    role: str
-    content: str
+    role: str="user"
+    content: str="Hello"
 
 
 class ConversationRequest(BaseModel):
@@ -166,7 +166,9 @@ ln -s /var/lib/dkms/amdgpu/6.3.6-1739731.22.04/source /var/lib/dkms/amdgpu/6.3.6
 # "summary":"tóm tắt đoạn văn"
 # }
 # """
-modelpath = "/mldlai/Vistral-7B-Chat"
+# modelpath = "/work/shared/vicuna-7b-v1.5"
+# modelpath = "/work/shared/gemma-2-2b"
+modelpath = "/work/shared/Vistral-7B-Chat"
 tokenizer = AutoTokenizer.from_pretrained(modelpath)
 model = AutoModelForCausalLM.from_pretrained(
     modelpath,
@@ -174,6 +176,11 @@ model = AutoModelForCausalLM.from_pretrained(
     device_map=device_type,
     use_cache=False,
 )
+
+
+# Move the model to the NPU
+device = torch.device(device_type)
+model.to(device)
 
 conversation = [{"role": "system", "content": system_prompt}]
 
@@ -222,6 +229,18 @@ async def llm_get(conversationid: str = Form(f"{uuid.uuid4()}")):
     pass
 
 
+# Define a chat template function
+def vicuna_apply_chat_template(user_input):
+    return f"<|user|>: {user_input} <|bot|>:"
+
+
+# Define a custom chat template function
+def gemma_apply_chat_template(messages):
+    chat_history = ""
+    for message in messages:
+        chat_history += f"{message['role']}: {message['content']}\n"
+    return chat_history
+
 @webApp.post("/apis/llm/ask")
 async def llm_ask(
     msg: str = Form(None),
@@ -243,9 +262,11 @@ async def llm_ask(
     t1 = datetime.datetime.now().timestamp()
     conversation.append({"role": "user", "content": msg})
 
-    input_ids = tokenizer.apply_chat_template(conversation, return_tensors="pt").to(
-        model.device
-    )
+    # input_ids = tokenizer.apply_chat_template(conversation, return_tensors="pt").to(
+    #     model.device
+    # )
+    input_ids = tokenizer(gemma_apply_chat_template(conversation), return_tensors="pt").to(model.device)
+    
     out_ids = model.generate(
         input_ids=input_ids,
         # max_new_tokens=768,
@@ -320,7 +341,7 @@ async def llm_embedin(request: EmbeddingRequest):
     pass
 
 
-@webApp.post("v1/chat/completions")
+@webApp.post("/v1/chat/completions")
 async def llm_chat_completion(request: ChatRequest):
     print("request-----------B")
     print(request)
@@ -331,11 +352,14 @@ async def llm_chat_completion(request: ChatRequest):
         conversation_sessions_gpt_similar[request.conversationid] = request
         pass
 
-    input_ids = tokenizer.apply_chat_template(request.messages, return_tensors="pt").to(
-        model.device
-    )
+    # input_ids = tokenizer.apply_chat_template(request.messages, return_tensors="pt").to(
+    #     model.device
+    # )
+    
+    input_ids = tokenizer(gemma_apply_chat_template(conversation),return_tensors="pt").to(model.device)
+    
     out_ids = model.generate(
-        input_ids=input_ids,
+        **input_ids,
         # max_new_tokens=768,
         max_new_tokens=request.max_tokens,
         pad_token_id=2,
@@ -345,9 +369,12 @@ async def llm_chat_completion(request: ChatRequest):
         temperature=request.temperature,
         repetition_penalty=request.repetition_penalty,
     )
-    assistants = tokenizer.batch_decode(
-        out_ids[:, input_ids.size(1) :], skip_special_tokens=request.skip_special_tokens
-    )
+    # assistants = tokenizer.batch_decode(
+    #     out_ids[:, input_ids.size(1) :], skip_special_tokens=request.skip_special_tokens
+    # )
+    assistants = tokenizer.batch_decode( out_ids ,skip_special_tokens=request.skip_special_tokens)
+    
+    # print(assistant)
 
     choices = []
     for idx, assistant in enumerate(assistants):
