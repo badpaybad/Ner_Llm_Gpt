@@ -195,3 +195,4 @@ mediapipe/exported_model/**
 **/chunomdataset/**
 **/exported_model_1000epoch/**
 mediapipe/updated_resnet100.tflite
+gemma/test.py
