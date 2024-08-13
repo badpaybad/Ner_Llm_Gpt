@@ -128,26 +128,69 @@ class OpenCvFrameBuilder:
         self.faceDetector= InsightFaceDectectRecognition(workingDir)
         pass
     
-        
-    def process(self,frame):
+    def getFaceAreaFake(self,frame):
         (face,bbox,landmarkPts)=self.faceDetector.DetectFace(frame)[0]
         (x,y,w,h)=bbox
-        
-        
         facecroped= self.faceDetector.CropPadding(frame,bbox,0.01)
-        # self.drawLandmark(frame,landmarkPts)
-        
-        # cv2.rectangle(frame, (x,y),(x+w,y+h), (0, 0, 255, 255),1)
-        
         areaface=[(x,y),(x+w,y)]
         areaface.extend(landmarkPts[:32])
-        keeped= self.keepInsideArea(frame,areaface)
+        keepedMark= self.keepInsideArea(frame,areaface)
         
-        cv2.imwrite("1.png",keeped)
+        keeped = keepedMark[y:y+h, x:x+w]
         
-        cv2.imshow("org", keeped)
+        return (keeped, face,bbox, landmarkPts,keepedMark)
+        
+    def process(self,frame, framefake):
+        # (face,bbox,landmarkPts)=self.faceDetector.DetectFace(frame)[0]
+        # (x,y,w,h)=bbox      
+        
+        # facecroped= self.faceDetector.CropPadding(frame,bbox,0.01)
+        # # self.drawLandmark(frame,landmarkPts)
+        
+        # # cv2.rectangle(frame, (x,y),(x+w,y+h), (0, 0, 255, 255),1)
+        
+        # areaface=[(x,y),(x+w,y)]
+        # areaface.extend(landmarkPts[:32])
+        keeped, face,bbox,landmarkPts, keepdArea= self.getFaceAreaFake(frame)
+        
+        cv2.imwrite("keeped.png",keeped)
+        (x,y,w,h)=bbox    
+        
+        areafake,fakeface,fakebbox,fakelandmark,fakekeepedarea= self.getFaceAreaFake(framefake)
+        
+        cv2.imwrite("areafake.png",areafake)
+        
+        areafake= cv2.resize(areafake, (w,h))
+        
+        
+        self.drawOverlayImage(frame,areafake,x,y)
+    
+        
+        cv2.imshow("org", frame)
         cv2.waitKey(0)
         pass
+    def drawOverlayImage(self,frame,image1,x,y):
+        
+        # image1 = cv2.cvtColor(image1, cv2.COLOR_BGR2BGRA)
+        h1, w1,c = image1.shape
+                
+        # Define the region of interest (ROI) on image2
+        roi = frame[y:y+h1, x:x+w1]
+        
+        roih,roiw, roic= roi.shape
+        
+                
+        # Ensure that image1 is within the boundaries of image2
+        if image1.shape[0] <= roih and image1.shape[1] <= roiw:
+            # Overlay image1 onto the ROI of image2
+            alpha_image1 = image1[..., 3] / 255.0 if image1.shape[2] == 4 else 1  # Use alpha channel if it exists
+            alpha_image2 = 1.0 - alpha_image1
+            
+            for c in range(0, 3):
+                roi[:, :, c] = (alpha_image1 * image1[:, :, c] + alpha_image2 * roi[:, :, c])
+        else:
+            print("The overlay image is larger than the region of interest.")
+        
     def drawText(self,frame,text,xy):                  
         # Define the font
         font = cv2.FONT_HERSHEY_SIMPLEX
@@ -210,6 +253,7 @@ class OpenCvFrameBuilder:
         # # background = np.ones_like(frame) * 0  # black background
         # background = np.ones_like(frame)  # transparent background
         # masked_frame = np.where(mask == 0, background, masked_frame)
+        masked_frame = cv2.cvtColor(masked_frame, cv2.COLOR_BGR2BGRA)
         
         return masked_frame
     
@@ -219,5 +263,5 @@ framebuilder=OpenCvFrameBuilder(workingDir)
 frameorg= cv2.imread("/work/llm/Ner_Llm_Gpt/deepfacefake/ducmnd.jpg")
 framefake= cv2.imread("/work/llm/Ner_Llm_Gpt/deepfacefake/hoandung.jpg")
 
-framebuilder.process(frameorg)
+framebuilder.process(frameorg,framefake)
 
