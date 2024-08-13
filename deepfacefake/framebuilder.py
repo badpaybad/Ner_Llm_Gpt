@@ -66,7 +66,10 @@ class OpenCvFrameBuilder:
     
     def getFaceAreaFake(self,frame):
         padding= 0.25
-        (face,bbox,landmarkPts)=self.faceDetector.DetectFace(frame)[0]
+        facesfound=self.faceDetector.DetectFace(frame)
+        if len(facesfound)<=0:
+            return  (None,None,None,None,None,None,None,None)
+        (face,bbox,landmarkPts)=facesfound[0]
         (x,y,w,h)=bbox
         facecroped= self.faceDetector.CropPadding(frame,bbox,padding)
         areaface=[(x,y),(x+w,y)]
@@ -100,13 +103,13 @@ class OpenCvFrameBuilder:
         
         # areaface=[(x,y),(x+w,y)]
         # areaface.extend(landmarkPts[:32])
-        keeped, face,bbox,landmarkPts, keepdArea, croped, padx,pady= self.getFaceAreaFake(frame)
-        
+        (keeped, face,bbox,landmarkPts, keepdArea, croped, padx,pady)= self.getFaceAreaFake(frame)
+                
         cv2.imwrite("keeped.png",keeped)
         x,y,w,h=bbox    
         
         
-        areafake,fakeface,fakebbox,fakelandmark,fakekeepedarea, fakecroped,fakepadx,fakepady= self.getFaceAreaFake(framefake)
+        (areafake,fakeface,fakebbox,fakelandmark,fakekeepedarea, fakecroped,fakepadx,fakepady)= self.getFaceAreaFake(framefake)
                 
         areafake= cv2.resize(areafake, (w,h))        
         cv2.imwrite("areafake.png",areafake)
@@ -131,11 +134,11 @@ class OpenCvFrameBuilder:
         
         cv2.rectangle(frame, (x+padx,y+pady), (x+w-padx,y+h-pady), (0,0,255), 1)
     
+        return frame
+        # cv2.imwrite("finallblended.png",frame)
         
-        cv2.imwrite("finallblended.png",frame)
-        
-        cv2.imshow("org", frame)
-        cv2.waitKey(0)
+        # cv2.imshow("org", frame)
+        # cv2.waitKey(0)
         pass
     def blendImage(self,imgsrc,imgoverlay):
                 
@@ -187,11 +190,38 @@ class OpenCvFrameBuilder:
             cv2.rectangle(frame, (x,y),(x+1,y+1), (0, 0, 255, 255),1)
             if idx<33:
                 self.drawText(frame,f"{idx}",(x,y))
+                
+                
+                
 framebuilder=OpenCvFrameBuilder(workingDir)
 
 
 frameorg= cv2.imread("/work/llm/Ner_Llm_Gpt/deepfacefake/ducmnd.jpg")
 framefake= cv2.imread("/work/llm/Ner_Llm_Gpt/deepfacefake/hoandung.jpg")
 
-framebuilder.process(frameorg,framefake)
+# framebuilder.process(frameorg,framefake)
 
+# 0 is the default camera (usually the built-in webcam)
+cap = cv2.VideoCapture(0)
+while True:
+    # Read a frame from the camera
+    ret, frame = cap.read()
+
+    # Check if the frame was read correctly
+    if not ret:
+        print("Failed to grab frame")
+        break
+    try:
+        framebuilder.process(frame,framefake)
+    except Exception as ex:
+        pass
+    # Display the frame
+    cv2.imshow('Camera Feed', frame)
+
+    # Exit the loop if 'q' is pressed
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+
+cap.release()
+cv2.destroyAllWindows()
