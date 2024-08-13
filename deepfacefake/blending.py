@@ -129,7 +129,7 @@ def blendingImage(faceimage1,faceimage2):
     else:
         # print("Could not find landmarks in one of the images.")
         return None
-def makeTransparent(image,points,radius = 10, opacity=0.5):
+def makeTransparent(image,points,radius = 20, opacity=0.5):
     
     points = detector.sortPointsClockwise(points)
     # # Create a mask with the same dimensions as the image

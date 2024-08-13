@@ -106,7 +106,7 @@ class OpenCvFrameBuilder:
         x,y,w,h=bbox    
         
         
-        areafake,fakeface,fakebbox,fakelandmark,fakekeepedarea, fakecroped,padx,pady= self.getFaceAreaFake(framefake)
+        areafake,fakeface,fakebbox,fakelandmark,fakekeepedarea, fakecroped,fakepadx,fakepady= self.getFaceAreaFake(framefake)
                 
         areafake= cv2.resize(areafake, (w,h))        
         cv2.imwrite("areafake.png",areafake)
@@ -122,14 +122,14 @@ class OpenCvFrameBuilder:
         # blended = cv2.warpPerspective(fakecroped, M, (croped.shape[1], croped.shape[0]))
         
         blended,landmark1,landmark2,bbox1,bbox2= blending.blendingImage(cv2.cvtColor( keeped, cv2.COLOR_BGRA2BGR),cv2.cvtColor( areafake, cv2.COLOR_BGRA2BGR))
-        # x,y,w,h=bbox1
+    
         # oareaface=[(x,y),(x+w,y)]
         # oareaface.extend(landmark1[:32])
         # okeepedMark= self.faceDetector.keepInsideArea(blended,oareaface)
-    
-        
-        
+            
         self.drawOverlayImage(frame,blended,x,y)
+        
+        cv2.rectangle(frame, (x+padx,y+pady), (x+w-padx,y+h-pady), (0,0,255), 1)
     
         
         cv2.imwrite("finallblended.png",frame)
