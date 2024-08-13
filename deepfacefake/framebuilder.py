@@ -16,7 +16,7 @@ import insightface
 from insightface.app import FaceAnalysis
 from insightface.model_zoo import landmark
 from insightface.utils import face_align
-
+from InsightFaceDectectRecognition import InsightFaceDectectRecognition
 
 def getCurrentUserName():
     uname= os.environ.get('USERNAME')
@@ -56,71 +56,7 @@ from skimage import transform as trans
 
 import onnxruntime
 
-class ImageBBox(object):
-    def __init__(self) :
-        self.bbox=[]
-        self.kps=[]
-        #self.shape = (5, 2)
-        pass
-    pass
-    
-class InsightFaceDectectRecognition:
-    def __init__(self,workingDir) :
-        self.workingDir=workingDir
-        
-        print("InsightFaceDectectRecognition workingdir: "+ workingDir)
-                        
-        self.detector = FaceAnalysis(allowed_modules=['detection', 'landmark_2d_106'], root=f"{workingDir}/weights/")
-        self.detector.prepare(ctx_id=0, det_size=(320, 320))
-        print("self.detector")
-        print(self.detector)
-        
-    def DetectFace(self,frameRgb):
-        """[(facecrop,(x,y,w,h),[pointlandmark])]
-        
-        facecrop use for VectorFace
-        Args:
-            frameRgb ([type]): [description]
-        """
-        faces =  self.detector.get(frameRgb)
-        #print("faces", len(faces))
-        listFound=[]
-        for face in faces:
-            #print(face)
-            x,y,x1,y1= face.bbox
-            x,y,x1,y1=int(x),int(y),int(x1),int(y1)
-            #cv2.rectangle(tim,(int(x),int(y)),(int(x1),int(y1)),(0,0,255,0))
-            
-            lmk = face.landmark_2d_106
-            lmk = np.round(lmk).astype(np.int32)
-            landmarkPts=[]
-            
-            for i in range(lmk.shape[0]):
-                p = tuple(lmk[i])
-                landmarkPts.append(p)
-                #cv2.circle(tim, p, 1, color, 1, cv2.LINE_AA)
-            
-            listFound.append((face,(x,y,x1-x,y1-y),landmarkPts))
-        del faces
-        return listFound
-    
-    def CropPadding(self,cv2img,faceregion, padding=0.25):
-        x,y,w,h=faceregion
-        
-        deltax=int(w*padding)
-        deltay=int(h*padding)
-        x=x-deltax
-        y=y-deltay
-        w=w+deltax+deltax
-        h=h+deltay+deltay
-        
-        return cv2img[y:y+h,x:x+w]
-            
-    def AlignFace(self,frameRgb, facecrop):
-        aimg = face_align.norm_crop(frameRgb, landmark=facecrop.kps)
-        return aimg
-
-
+import blending
 
 class OpenCvFrameBuilder:
     def __init__(self,workingDir) :
@@ -129,21 +65,34 @@ class OpenCvFrameBuilder:
         pass
     
     def getFaceAreaFake(self,frame):
+        padding= 0.25
         (face,bbox,landmarkPts)=self.faceDetector.DetectFace(frame)[0]
         (x,y,w,h)=bbox
-        facecroped= self.faceDetector.CropPadding(frame,bbox,0.01)
+        facecroped= self.faceDetector.CropPadding(frame,bbox,padding)
         areaface=[(x,y),(x+w,y)]
         areaface.extend(landmarkPts[:32])
-        keepedMark= self.keepInsideArea(frame,areaface)
+        keepedMark= self.faceDetector.keepInsideArea(frame,areaface)
+        xw=int( w*padding)
+        yh=int(h*padding)
+        x=x-xw
+        y=y-yh
+        w=w+xw+xw
+        h=h+yh+yh
+        bbox=(x,y,w,h)
         
+        cropedorg= frame[y:y+h, x:x+w]
         keeped = keepedMark[y:y+h, x:x+w]
         
-        return (keeped, face,bbox, landmarkPts,keepedMark)
+        return (keeped, face,bbox, landmarkPts,keepedMark,cropedorg, xw, yh)
         
     def process(self,frame, framefake):
-        # (face,bbox,landmarkPts)=self.faceDetector.DetectFace(frame)[0]
-        # (x,y,w,h)=bbox      
-        
+        # oh,ow,oc=frame.shape
+        # framefake= cv2.resize(frame,(ow,oh))
+        # (oface,obbox,olandmarkPts)=self.faceDetector.DetectFace(frame)[0]
+        # (ox,oy,ow,oh)=obbox      
+        # oareaface=[(x,y),(x+w,y)]
+        # oareaface.extend(olandmarkPts[:32])
+        # okeepedMark= self.keepInsideArea(frame,oareaface)
         # facecroped= self.faceDetector.CropPadding(frame,bbox,0.01)
         # # self.drawLandmark(frame,landmarkPts)
         
@@ -151,24 +100,53 @@ class OpenCvFrameBuilder:
         
         # areaface=[(x,y),(x+w,y)]
         # areaface.extend(landmarkPts[:32])
-        keeped, face,bbox,landmarkPts, keepdArea= self.getFaceAreaFake(frame)
+        keeped, face,bbox,landmarkPts, keepdArea, croped, padx,pady= self.getFaceAreaFake(frame)
         
         cv2.imwrite("keeped.png",keeped)
-        (x,y,w,h)=bbox    
+        x,y,w,h=bbox    
         
-        areafake,fakeface,fakebbox,fakelandmark,fakekeepedarea= self.getFaceAreaFake(framefake)
         
+        areafake,fakeface,fakebbox,fakelandmark,fakekeepedarea, fakecroped,padx,pady= self.getFaceAreaFake(framefake)
+                
+        areafake= cv2.resize(areafake, (w,h))        
         cv2.imwrite("areafake.png",areafake)
+        # blended= self.blendImage(keeped, areafake)
         
-        areafake= cv2.resize(areafake, (w,h))
+        # (a,b,landmarkPts)=self.faceDetector.DetectFace(croped)[0]
+        # (a,b,fakelandmark)=self.faceDetector.DetectFace(fakecroped)[0]
         
+                # Compute the perspective transformation matrix
+        # M = cv2.getPerspectiveTransform(np.array(landmarkPts, dtype='float32'),np.array( fakelandmark, dtype='float32'))
+
+        # # Apply the perspective transformation to the target image
+        # blended = cv2.warpPerspective(fakecroped, M, (croped.shape[1], croped.shape[0]))
         
-        self.drawOverlayImage(frame,areafake,x,y)
+        blended,landmark1,landmark2,bbox1,bbox2= blending.blendingImage(cv2.cvtColor( keeped, cv2.COLOR_BGRA2BGR),cv2.cvtColor( areafake, cv2.COLOR_BGRA2BGR))
+        # x,y,w,h=bbox1
+        # oareaface=[(x,y),(x+w,y)]
+        # oareaface.extend(landmark1[:32])
+        # okeepedMark= self.faceDetector.keepInsideArea(blended,oareaface)
     
+        
+        
+        self.drawOverlayImage(frame,blended,x,y)
+    
+        
+        cv2.imwrite("finallblended.png",frame)
         
         cv2.imshow("org", frame)
         cv2.waitKey(0)
         pass
+    def blendImage(self,imgsrc,imgoverlay):
+                
+
+        alpha = 0.1  # Weight of the first image (source)
+        beta = 1 - alpha  # Weight of the second image (target)
+
+        # Blend the images
+        blended_image = cv2.addWeighted(imgsrc, alpha, imgoverlay, beta, 0)
+        return blended_image
+    
     def drawOverlayImage(self,frame,image1,x,y):
         
         # image1 = cv2.cvtColor(image1, cv2.COLOR_BGR2BGRA)
@@ -209,54 +187,6 @@ class OpenCvFrameBuilder:
             cv2.rectangle(frame, (x,y),(x+1,y+1), (0, 0, 255, 255),1)
             if idx<33:
                 self.drawText(frame,f"{idx}",(x,y))
-    def sortPointsClockwise(self, points):
-                
-        # Calculate the centroid of the points
-        centroid = np.mean(points, axis=0)
-
-        # Sort points by the angle relative to the centroid
-        def angle_from_centroid(point):
-            return np.arctan2(point[1] - centroid[1], point[0] - centroid[0])
-
-        sorted_points = sorted(points, key=angle_from_centroid)
-
-        # Convert to numpy array after sorting (for OpenCV functions)
-        sorted_points = np.array(sorted_points, dtype=np.int32)
-        
-        return sorted_points
-                
-    def keepInsideArea(self,frame, points):
-        sortClw= self.sortPointsClockwise(points)
-        sortClw = np.array(sortClw)
-                
-        # Convert the frame to RGBA (add an alpha channel)
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)
-        # # Create a mask with the same dimensions as the frame, initialized to zeros (black)
-        # mask = np.zeros_like(frame)
-                
-        # Create a mask with the same dimensions as the frame, initialized to zeros (black)
-        mask = np.zeros(frame.shape[:2], dtype=np.uint8)
-
-        # # Fill the polygon defined by 'points' with white color (255) on the mask
-        # cv2.fillPoly(mask, [sortClw], (255, 255, 255))
-        cv2.fillPoly(mask, [sortClw], 255)
-        frame[mask == 0, 3] = 0
-        
-        # If you want to remove the black background entirely and replace it with transparency:
-        background = np.zeros_like(frame)  # transparent background
-        masked_frame = np.where(mask[..., None] == 0, background, frame)
-
-        # # Apply the mask to the frame using bitwise AND to keep only the area inside the polygon
-        # masked_frame = cv2.bitwise_and(frame, mask)
-
-        # # Optionally, convert masked areas to black (if needed)
-        # # background = np.ones_like(frame) * 0  # black background
-        # background = np.ones_like(frame)  # transparent background
-        # masked_frame = np.where(mask == 0, background, masked_frame)
-        masked_frame = cv2.cvtColor(masked_frame, cv2.COLOR_BGR2BGRA)
-        
-        return masked_frame
-    
 framebuilder=OpenCvFrameBuilder(workingDir)
 
 
