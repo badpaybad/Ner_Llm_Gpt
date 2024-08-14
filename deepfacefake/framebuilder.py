@@ -133,6 +133,7 @@ class OpenCvFrameBuilder:
         self.drawOverlayImage(frame,blended,x,y)
         
         cv2.rectangle(frame, (x+padx,y+pady), (x+w-padx,y+h-pady), (0,0,255), 1)
+        
     
         return frame
         # cv2.imwrite("finallblended.png",frame)
@@ -172,24 +173,23 @@ class OpenCvFrameBuilder:
         else:
             print("The overlay image is larger than the region of interest.")
         
-    def drawText(self,frame,text,xy):                  
+    def drawText(self,frame,text,xy,color = (255, 255, 255) ):                  
         # Define the font
         font = cv2.FONT_HERSHEY_SIMPLEX
         # Define font scale (size)
         font_scale = 0.5
         # Define color (BGR)
-        color = (255, 255, 255)  # White color
         # Define thickness of the text
         thickness = 1
         # Draw the text on the image
         cv2.putText(frame, text, xy, font, font_scale, color, thickness)
         pass
-    def drawLandmark(self,frame,landmarkPts):
+    def drawLandmark(self,frame,landmarkPts, color=(0, 0, 255, 255)):
         for idx, (x,y) in enumerate( landmarkPts):
             ## Convert to Scalar (in BGRA format)
-            cv2.rectangle(frame, (x,y),(x+1,y+1), (0, 0, 255, 255),1)
+            cv2.rectangle(frame, (x,y),(x+1,y+1), color,1)
             if idx<33:
-                self.drawText(frame,f"{idx}",(x,y))
+                self.drawText(frame,f"{idx}",(x,y), color)
                 
                 
                 
