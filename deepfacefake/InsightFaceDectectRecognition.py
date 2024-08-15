@@ -102,6 +102,16 @@ class InsightFaceDectectRecognition:
                 #cv2.circle(tim, p, 1, color, 1, cv2.LINE_AA)
             
             listFound.append((face,(x,y,x1-x,y1-y),landmarkPts))
+            
+            # 0->32: vien bao tu tai trai -> cam -> tai phai
+            # 33 -> 42 : mat phai
+            # 43-51: long may phai
+            # 52 -> 71 : moi 
+            # 72 -> 86 : mui
+            # 87 -> 96: mat trai
+            # 97 -> 105: long may trai
+            #
+            
         del faces
         return listFound
     

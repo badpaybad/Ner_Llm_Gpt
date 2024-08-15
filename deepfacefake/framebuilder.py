@@ -105,36 +105,60 @@ class OpenCvFrameBuilder:
         # areaface.extend(landmarkPts[:32])
         (keeped, face,bbox,landmarkPts, keepdArea, croped, padx,pady)= self.getFaceAreaFake(frame)
                 
-        cv2.imwrite("keeped.png",keeped)
+        # cv2.imwrite("keeped.png",keeped)
         x,y,w,h=bbox    
         
         
-        (areafake,fakeface,fakebbox,fakelandmark,fakekeepedarea, fakecroped,fakepadx,fakepady)= self.getFaceAreaFake(framefake)
+        # (areafake,fakeface,fakebbox,fakelandmark,fakekeepedarea, fakecroped,fakepadx,fakepady)= self.getFaceAreaFake(framefake)
                 
-        areafake= cv2.resize(areafake, (w,h))        
-        cv2.imwrite("areafake.png",areafake)
-        # blended= self.blendImage(keeped, areafake)
+        # areafake= cv2.resize(areafake, (w,h))        
+        # cv2.imwrite("areafake.png",areafake)
+        # # blended= self.blendImage(keeped, areafake)
         
-        # (a,b,landmarkPts)=self.faceDetector.DetectFace(croped)[0]
-        # (a,b,fakelandmark)=self.faceDetector.DetectFace(fakecroped)[0]
+        # # (a,b,landmarkPts)=self.faceDetector.DetectFace(croped)[0]
+        # # (a,b,fakelandmark)=self.faceDetector.DetectFace(fakecroped)[0]
         
-                # Compute the perspective transformation matrix
-        # M = cv2.getPerspectiveTransform(np.array(landmarkPts, dtype='float32'),np.array( fakelandmark, dtype='float32'))
+        #         # Compute the perspective transformation matrix
+        # # M = cv2.getPerspectiveTransform(np.array(landmarkPts, dtype='float32'),np.array( fakelandmark, dtype='float32'))
 
-        # # Apply the perspective transformation to the target image
-        # blended = cv2.warpPerspective(fakecroped, M, (croped.shape[1], croped.shape[0]))
+        # # # Apply the perspective transformation to the target image
+        # # blended = cv2.warpPerspective(fakecroped, M, (croped.shape[1], croped.shape[0]))
         
-        blended,landmark1,landmark2,bbox1,bbox2= blending.blendingImage(cv2.cvtColor( keeped, cv2.COLOR_BGRA2BGR),cv2.cvtColor( areafake, cv2.COLOR_BGRA2BGR))
+        # blended,landmark1,landmark2,bbox1,bbox2= blending.blendingImage(cv2.cvtColor( keeped, cv2.COLOR_BGRA2BGR),cv2.cvtColor( areafake, cv2.COLOR_BGRA2BGR))
     
-        # oareaface=[(x,y),(x+w,y)]
-        # oareaface.extend(landmark1[:32])
-        # okeepedMark= self.faceDetector.keepInsideArea(blended,oareaface)
+        # # oareaface=[(x,y),(x+w,y)]
+        # # oareaface.extend(landmark1[:32])
+        # # okeepedMark= self.faceDetector.keepInsideArea(blended,oareaface)
+        
+        # self.drawOverlayImage(frame,blended,x,y)
+        
+        cv2.rectangle(frame, (x+padx,y+pady), (x+w-padx,y+h-pady), (125,125,125), 1)
+        
+            # 0->32: vien bao tu tai trai -> cam -> tai phai
+            # 33 -> 42 : mat phai
+            # 43-51: long may phai
+            # 52 -> 71 : moi 
+            # 72 -> 86 : mui
+            # 87 -> 96: mat trai
+            # 97 -> 105: long may trai
+            #
             
-        self.drawOverlayImage(frame,blended,x,y)
+        landmarkPtsSorted= self.faceDetector.sortPointsClockwise(landmarkPts[0:33])        
+        self.drawLandmark(frame, landmarkPtsSorted,(0,0,255))
+        landmarkPtsSorted= self.faceDetector.sortPointsClockwise(landmarkPts[33:43])  
+        self.drawLandmark(frame, landmarkPtsSorted,(0,255,0))
+        landmarkPtsSorted= self.faceDetector.sortPointsClockwise(landmarkPts[43:52])  
+        self.drawLandmark(frame, landmarkPtsSorted,(255,0,0))
         
-        cv2.rectangle(frame, (x+padx,y+pady), (x+w-padx,y+h-pady), (0,0,255), 1)
+        landmarkPtsSorted= self.faceDetector.sortPointsClockwise(landmarkPts[52:72])  
+        self.drawLandmark(frame, landmarkPtsSorted,(0,255,255))
+        landmarkPtsSorted= self.faceDetector.sortPointsClockwise(landmarkPts[72:87])  
+        self.drawLandmark(frame, landmarkPtsSorted,(255,255,0))
+        landmarkPtsSorted= self.faceDetector.sortPointsClockwise(landmarkPts[87:97])  
+        self.drawLandmark(frame, landmarkPtsSorted,(255,0,255))
+        landmarkPtsSorted= self.faceDetector.sortPointsClockwise(landmarkPts[97:])  
+        self.drawLandmark(frame, landmarkPtsSorted,(255,255,255))
         
-    
         return frame
         # cv2.imwrite("finallblended.png",frame)
         
@@ -159,8 +183,7 @@ class OpenCvFrameBuilder:
         # Define the region of interest (ROI) on image2
         roi = frame[y:y+h1, x:x+w1]
         
-        roih,roiw, roic= roi.shape
-        
+        roih,roiw, roic= roi.shape        
                 
         # Ensure that image1 is within the boundaries of image2
         if image1.shape[0] <= roih and image1.shape[1] <= roiw:
@@ -177,7 +200,7 @@ class OpenCvFrameBuilder:
         # Define the font
         font = cv2.FONT_HERSHEY_SIMPLEX
         # Define font scale (size)
-        font_scale = 0.5
+        font_scale = 0.4
         # Define color (BGR)
         # Define thickness of the text
         thickness = 1
@@ -188,7 +211,7 @@ class OpenCvFrameBuilder:
         for idx, (x,y) in enumerate( landmarkPts):
             ## Convert to Scalar (in BGRA format)
             cv2.rectangle(frame, (x,y),(x+1,y+1), color,1)
-            if idx<33:
+            if idx>-1:
                 self.drawText(frame,f"{idx}",(x,y), color)
                 
                 
@@ -203,6 +226,10 @@ framefake= cv2.imread("/work/llm/Ner_Llm_Gpt/deepfacefake/hoandung.jpg")
 
 # 0 is the default camera (usually the built-in webcam)
 cap = cv2.VideoCapture(0)
+
+# Set resolution to full HD (1920x1080)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 while True:
     # Read a frame from the camera
     ret, frame = cap.read()
