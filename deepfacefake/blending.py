@@ -11,6 +11,7 @@ from InsightFaceDectectRecognition import InsightFaceDectectRecognition
 # predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
 detector=InsightFaceDectectRecognition(workingDir)
 def get_landmarks(frame):
+    
     (face,bbox,landmarkPts)=detector.DetectFace(frame)[0]
     
     return (np.array(landmarkPts),bbox)
@@ -216,3 +217,52 @@ def blendingPoints(background,points,blend_radius = 10):
     blended_image = cv2.addWeighted(blended_image, alpha, blend_effect, beta, 0)
     
     return blended_image
+
+
+# import cv2
+# import numpy as np
+
+
+
+
+# # Read the images
+# image1 = cv2.imread('/work/llm/Ner_Llm_Gpt/deepfacefake/ducmnd.jpg')
+# image2 = cv2.imread('/work/llm/Ner_Llm_Gpt/deepfacefake/hoandung.jpg')
+
+
+# # Sample points1 and points2
+# points1 = np.array([[400, 400] , [800, 400], [800, 800], [400, 800]], dtype=np.float32)
+# points2 = np.array([[500, 500], [900, 500], [900, 900], [500, 900]], dtype=np.float32)
+# l1, b1 = get_landmarks(image1)
+# l2, b2 = get_landmarks(image2)
+
+# # print(l1[:32])
+
+def transitionBbox(b1,b2, image1,image2):
+
+    points1 = np.array([[b1[0], b1[1]] , [b1[0]+b1[2], b1[1]], [b1[0]+b1[2], b1[1]+b1[3]], [b1[0], b1[1]+b1[3]]], dtype=np.float32)
+    points2 = np.array([[b2[0], b2[1]] , [b2[0]+b2[2], b2[1]], [b2[0]+b2[2], b2[1]+b2[3]], [b2[0], b2[1]+b2[3]]], dtype=np.float32)
+
+    # Get the perspective transform matrix to transform points2 to points1
+    M = cv2.getPerspectiveTransform(points2, points1)
+
+    # Warp the perspective of image2 to align it with points1
+    warped_image = cv2.warpPerspective(image2, M, (image1.shape[1], image1.shape[0]))
+
+    # Create a mask of the warped image
+    mask = np.zeros_like(image1, dtype=np.uint8)
+    cv2.fillConvexPoly(mask, points1.astype(np.int32), (255, 255, 255))
+
+    # Extract the region of interest in image1 and combine it with the warped image
+    image1_bg = cv2.bitwise_and(image1, cv2.bitwise_not(mask))
+    result = cv2.add(image1_bg, cv2.bitwise_and(warped_image, mask))
+    
+    return result
+
+    # # Display the result
+    # cv2.imshow('Overlay Image', result)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+
+    # # Save the result if needed
+    # cv2.imwrite('overlay_result.png', result)
