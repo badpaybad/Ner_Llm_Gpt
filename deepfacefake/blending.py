@@ -130,6 +130,78 @@ def blendingImage(faceimage1,faceimage2):
     else:
         # print("Could not find landmarks in one of the images.")
         return None
+    
+
+def blendingImageWithPoints(faceimage1,faceimage2,landmarks1,landmarks2):
+
+# faceimage2 = cv2.imread('/work/llm/Ner_Llm_Gpt/deepfacefake/areafake.png')
+# faceimage1 = cv2.imread('/work/llm/Ner_Llm_Gpt/deepfacefake/keeped.png')
+# Get landmarks
+    # landmarks1,bbox1 = get_landmarks(faceimage1)
+    # landmarks2,bbox2 = get_landmarks(faceimage2)
+
+    if landmarks1 is not None and landmarks2 is not None:
+        rect = cv2.boundingRect(np.array(landmarks1))
+        delaunay_triangles = calculate_delaunay_triangles(rect, landmarks1)
+
+        for triangle in delaunay_triangles:
+            t1 = [landmarks1[i] for i in triangle]
+            t2 = [landmarks2[i] for i in triangle]
+
+            warp_triangle(faceimage2, faceimage1, t2, t1)
+
+        # Blending the face using seamless clone
+        mask = np.zeros_like(faceimage1)
+        convexhull = cv2.convexHull(np.array(landmarks1, dtype=np.float32))
+        cv2.fillConvexPoly(mask, np.int32(convexhull), (255, 255, 255))
+
+        r = cv2.boundingRect(convexhull)
+        center = (r[0] + int(r[2] / 2), r[1] + int(r[3] / 2))
+
+        result = cv2.seamlessClone(faceimage2, faceimage1, mask, center, cv2.NORMAL_CLONE)
+                
+        result=cv2.cvtColor(result,cv2.COLOR_BGR2BGRA)
+        
+        result=makeTransparent(result,landmarks1,10)
+        result= detector.keepInsideArea(result,landmarks1)
+                
+
+        # cv2.imshow("Result", result)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
+        return (result,landmarks1,landmarks2)
+    else:
+        # print("Could not find landmarks in one of the images.")
+        return None
+def makeTransparentArea(image,points, opacity=0): 
+
+    # Ensure the image has an alpha channel
+    if image is None or image.shape[2] != 4:
+        print("Image does not have an alpha channel or failed to load. Please use an image with transparency.")
+        exit()
+        
+        
+    cv2.fillPoly(image, [points], color=(0, 0, 0,0))
+    
+    return image
+
+    # Create a mask with the same size as the image, initialized to black (0)
+    mask = np.zeros(image.shape[:2], dtype=np.uint8)
+
+    # Fill the mask with white (255) in the region defined by the points
+    cv2.fillPoly(mask, [points], 255)
+
+    # Extract the alpha channel from the image
+    b, g, r, a = cv2.split(image)
+
+    # Set the alpha channel to 0 (fully transparent) where the mask is white
+    a[mask == 255] = 0
+
+    # Merge the modified alpha channel back with the BGR channels
+    result = cv2.merge([b, g, r, a])
+    
+    return result
+
 def makeTransparent(image,points,radius = 20, opacity=0.5):
     
     points = detector.sortPointsClockwise(points)

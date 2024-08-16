@@ -177,5 +177,23 @@ class InsightFaceDectectRecognition:
         sorted_points = np.array(sorted_points, dtype=np.int32)
         
         return sorted_points
+    def sortPointsTopDown(self, points):
+        # Sorting the list by y values (ascending)
+        sorted_points = sorted(points, key=lambda point: point[1])
+        return sorted_points
+    
+    def landmarkSegments(self, landmarkPts):
+        result=[]
+        result.append(landmarkPts[:33])
+        result.append(landmarkPts[33:43])
+        result.append(landmarkPts[43:52])
+        result.append(landmarkPts[52:72])
+        result.append(landmarkPts[72:87])
+        result.append(landmarkPts[87:97])
+        result.append(landmarkPts[97:])
+        return result
+    
+    def getBbox(self, points):
+        return cv2.boundingRect(np.array( points))
 
     
