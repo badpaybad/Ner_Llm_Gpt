@@ -70,7 +70,7 @@ class OpenCvFrameBuilder:
 
         facesfound = self.faceDetector.DetectFace(frame)
         if len(facesfound) <= 0:
-            return (None, None, None, None, None, None, None, None)
+            return (None, None, None, None)
         (face, bbox, landmarkPts) = facesfound[0]
         (x, y, w, h) = bbox
         # facecroped= self.faceDetector.CropPadding(frame,bbox,padding)
@@ -191,6 +191,8 @@ class OpenCvFrameBuilder:
             # cv2.waitKey(1)
             # print(tc.shape)
             self.drawOverlayImage(frame, tc, 0, 0)
+            
+        # self.drawLandmark(frame,landmarkPts)
         
         return frame
         # cv2.imwrite("finallblended.png",frame)
@@ -209,8 +211,15 @@ class OpenCvFrameBuilder:
         result.append(borderface)
         result.append(landmarkPts[33:43])
         result.append(landmarkPts[43:52])
-        result.append(landmarkPts[52:72])
-        result.append(landmarkPts[72:87])
+        
+        result.append(landmarkPts[52:63])       # moi tren
+        result.append(landmarkPts[63:72])       # moi duoi
+        
+        result.append(landmarkPts[72:82]) #mui
+        mui=landmarkPts[72:75]
+        mui.extend(landmarkPts[79:87])
+        result.append(mui )
+        
         result.append(landmarkPts[87:97])
         result.append(landmarkPts[97:])
         return result
