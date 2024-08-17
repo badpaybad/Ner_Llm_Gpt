@@ -116,7 +116,7 @@ class OpenCvFrameBuilder:
         x, y, w, h = bbox
 
         (areafake, landmarkPtsfake, bboxfake,
-        bboxpadedfake) = self.getFaceAreaFake(framefake)
+         bboxpadedfake) = self.getFaceAreaFake(framefake)
         facesegmentsfake = self.splitLandmarkToArea(
             landmarkPtsfake, bboxfake, 0, 0)
         # for l in landmarkPtsfake:
@@ -127,29 +127,32 @@ class OpenCvFrameBuilder:
         # cv2.imwrite("areafake.png",areafake)
         # # blended= self.blendImage(keeped, areafake)
         tempframe = frame.copy()
-        
+
         for idx, s in enumerate(facesegments):
-            if idx==0:
-                tmp= self.faceDetector.getBbox(s)
-                tmp1= self.faceDetector.getBbox(facesegmentsfake[idx])
-                        
-                facesegments[idx].append((tmp[0],int(tmp[1]-tmp[3]/4)))
-                facesegments[idx].append((tmp[0]+tmp[2],int(tmp[1]-tmp[3]/4)))                
-                
-                facesegmentsfake[idx].append((tmp1[0],int(tmp1[1]-tmp1[3]/4)))
-                facesegmentsfake[idx].append((tmp1[0]+tmp1[2],int(tmp1[1]-tmp1[3]/4)))
-        
-            facesegments[idx]= self.faceDetector.sortPointsClockwise(facesegments[idx])
-            facesegmentsfake[idx]= self.faceDetector.sortPointsClockwise(facesegmentsfake[idx])
-            
+            if idx == 0:
+                tmp = self.faceDetector.getBbox(s)
+                tmp1 = self.faceDetector.getBbox(facesegmentsfake[idx])
+
+                facesegments[idx].append((tmp[0], int(tmp[1]-tmp[3]/4)))
+                facesegments[idx].append((tmp[0]+tmp[2], int(tmp[1]-tmp[3]/4)))
+
+                facesegmentsfake[idx].append((tmp1[0], int(tmp1[1]-tmp1[3]/4)))
+                facesegmentsfake[idx].append(
+                    (tmp1[0]+tmp1[2], int(tmp1[1]-tmp1[3]/4)))
+
+            facesegments[idx] = self.faceDetector.sortPointsClockwise(
+                facesegments[idx])
+            facesegmentsfake[idx] = self.faceDetector.sortPointsClockwise(
+                facesegmentsfake[idx])
+
         # for idx, s in enumerate(facesegments):
         #     if idx!=0:
         #         continue
         #     sf = facesegmentsfake[idx]
-                        
+
         #     b1 = self.faceDetector.getBbox(s)
         #     b2 = self.faceDetector.getBbox(sf)
-            
+
         #     tempframe= cv2.cvtColor(tempframe,cv2.COLOR_BGRA2BGR)
         #     tempframe = blending.transitionBbox(b1, b2, tempframe, framefake)
         #     #tc=self.faceDetector.CropPadding(tempframe,b1,10)
@@ -157,43 +160,43 @@ class OpenCvFrameBuilder:
         #     tempframe=blending.makeTransparent(tempframe,s,2,0.9)
         #     tc=self.faceDetector.keepInsideArea(tempframe,s)
         #     self.drawOverlayImage(frame, tc, 0, 0)
-        
-        frame= cv2.cvtColor(frame,cv2.COLOR_BGR2BGRA)
+
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)
         for idx, s in enumerate(facesegments):
-            if idx==0:
-                continue          
+            if idx == 0:
+                continue
             # s= self.faceDetector.sortPointsClockwise(s)
-            frame=blending.makeTransparentArea(frame,s)
-            
+            frame = blending.makeTransparentArea(frame, s)
+
             # frame=blending.makeTransparentArea(frame,facesegmentsfake[idx])
-            
+
             # x1,y1,w1,h1= cv2.boundingRect(s)
-                        
+
             # cv2.rectangle(frame, (x1,y1), (x1+w1,y1+h1), (0,0,255), -1)
-                        
+
         for idx, s in enumerate(facesegments):
-            if idx==0:
+            if idx == 0:
                 continue
             sf = facesegmentsfake[idx]
             # s= self.faceDetector.sortPointsClockwise(s)
             # sf= self.faceDetector.sortPointsClockwise(sf)
-            
+
             b1 = self.faceDetector.getBbox(s)
             b2 = self.faceDetector.getBbox(sf)
-            
-            tempframe= cv2.cvtColor(tempframe,cv2.COLOR_BGRA2BGR)
+
+            tempframe = cv2.cvtColor(tempframe, cv2.COLOR_BGRA2BGR)
             tempframe = blending.transitionBbox(b1, b2, tempframe, framefake)
-            #tc=self.faceDetector.CropPadding(tempframe,b1,10)
-            tempframe= cv2.cvtColor(tempframe,cv2.COLOR_BGR2BGRA)
-            tempframe=blending.makeTransparent(tempframe,s,2,0.9)
-            tc=self.faceDetector.keepInsideArea(tempframe,s)
+            # tc=self.faceDetector.CropPadding(tempframe,b1,10)
+            tempframe = cv2.cvtColor(tempframe, cv2.COLOR_BGR2BGRA)
+            tempframe = blending.makeTransparent(tempframe, s, 2, 0.9)
+            tc = self.faceDetector.keepInsideArea(tempframe, s)
             # cv2.imshow("org", tc)
             # cv2.waitKey(1)
             # print(tc.shape)
             self.drawOverlayImage(frame, tc, 0, 0)
-            
-        # self.drawLandmark(frame,landmarkPts)
-        
+
+        # self.drawLandmark(frame, landmarkPts)
+
         return frame
         # cv2.imwrite("finallblended.png",frame)
 
@@ -204,22 +207,24 @@ class OpenCvFrameBuilder:
     def splitLandmarkToArea(self, landmarkPts, bbox, padx, pady):
         x, y, w, h = bbox
         # borderface = [(x+padx, y+pady)]
-        borderface=[]
+        borderface = []
         borderface.extend(landmarkPts[:33])
         # borderface.append((x+w-padx, y+pady))
         result = []
         result.append(borderface)
         result.append(landmarkPts[33:43])
         result.append(landmarkPts[43:52])
-        
+
         result.append(landmarkPts[52:63])       # moi tren
         result.append(landmarkPts[63:72])       # moi duoi
-        
-        result.append(landmarkPts[72:82]) #mui
-        mui=landmarkPts[72:75]
-        mui.extend(landmarkPts[79:87])
-        result.append(mui )
-        
+
+        # result.append(landmarkPts[73:81]) #mui
+        mui = []
+        mui = [landmarkPts[74], landmarkPts[76], landmarkPts[77], landmarkPts[78],landmarkPts[79],
+            landmarkPts[80], landmarkPts[82], landmarkPts[83], landmarkPts[84], landmarkPts[85]]
+
+        result.append(mui)
+
         result.append(landmarkPts[87:97])
         result.append(landmarkPts[97:])
         return result
@@ -321,7 +326,7 @@ while True:
     # except Exception as ex:
     #     pass
     # Display the frame
-    res= framebuilder.process(frame, framefake)
+    res = framebuilder.process(frame, framefake)
     cv2.imshow('Camera Feed', res)
 
     # Exit the loop if 'q' is pressed
