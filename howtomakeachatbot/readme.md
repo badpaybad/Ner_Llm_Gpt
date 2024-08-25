@@ -117,8 +117,10 @@ docker run --privileged --gpus==all  -v ollama:/root/.ollama -p 11434:11434 --na
 https://ollama.com/library
 
 # working on gpu 3060 8GB
-sudo docker exec -it fd7dd2d4d5de ollama pull gemma2
-              
+
+                    sudo docker run --gpus all -p 15000:11434 ollama/ollama
+                    sudo docker exec -it fd7dd2d4d5de ollama pull gemma2
+                                
 
 
                 docker exec -it f455d69e6edcd67678b8924c44eebe1b936ec295a0ef2af7a2051abe7cb57e69 ollama pull gemma2
