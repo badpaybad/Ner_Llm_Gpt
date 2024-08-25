@@ -99,12 +99,12 @@ gpu https://github.com/ollama/ollama/blob/main/docs/gpu.md
                 sudo systemctl daemon-reload
                 sudo systemctl restart docker
 
-                docker run --gpus all ollama/ollama ollama run
+                sudo docker run --gpus all -p 15000:11434 ollama/ollama
 
                 https://hub.docker.com/r/ollama/ollama
 
-                docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
-
+                sudo docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+docker run --privileged --gpus==all  -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
 
                 The --gpus all flag tells Docker to use all available GPUs. You can specify particular GPUs if needed (e.g., --gpus '"device=0,1"').
 
@@ -115,6 +115,11 @@ gpu https://github.com/ollama/ollama/blob/main/docs/gpu.md
                 docker exec -it f455d69e6edcd67678b8924c44eebe1b936ec295a0ef2af7a2051abe7cb57e69 ollama pull mistral
 
 https://ollama.com/library
+
+# working on gpu 3060 8GB
+sudo docker exec -it fd7dd2d4d5de ollama pull gemma2
+              
+
 
                 docker exec -it f455d69e6edcd67678b8924c44eebe1b936ec295a0ef2af7a2051abe7cb57e69 ollama pull gemma2
                 docker exec -it f455d69e6edcd67678b8924c44eebe1b936ec295a0ef2af7a2051abe7cb57e69 ollama pull gemma2:27b
