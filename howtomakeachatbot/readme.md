@@ -99,12 +99,16 @@ gpu https://github.com/ollama/ollama/blob/main/docs/gpu.md
                 sudo systemctl daemon-reload
                 sudo systemctl restart docker
 
+## ollama run docker gpu
+
+                sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+                https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#next-steps
+
                 sudo docker run --gpus all -p 15000:11434 ollama/ollama
 
                 https://hub.docker.com/r/ollama/ollama
 
                 sudo docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
-docker run --privileged --gpus==all  -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
 
                 The --gpus all flag tells Docker to use all available GPUs. You can specify particular GPUs if needed (e.g., --gpus '"device=0,1"').
 
@@ -114,12 +118,12 @@ docker run --privileged --gpus==all  -v ollama:/root/.ollama -p 11434:11434 --na
                 docker exec -it {id container}> ollama pull mistral
                 docker exec -it f455d69e6edcd67678b8924c44eebe1b936ec295a0ef2af7a2051abe7cb57e69 ollama pull mistral
 
-https://ollama.com/library
+                https://ollama.com/library
 
 # working on gpu 3060 8GB
 
                     sudo docker run --gpus all -p 15000:11434 ollama/ollama
-                    sudo docker exec -it fd7dd2d4d5de ollama pull gemma2
+                    sudo docker exec -it 7b666f429917 ollama pull gemma2
                                 
 
 
