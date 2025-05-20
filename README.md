@@ -172,3 +172,10 @@ more usage: https://github.com/badpaybad/llama.cpp.docker
                     git clone https://oauth:hf_...yourtoken....@huggingface.co/vinai/PhoGPT-7B5-Instruct/               
 
 
+# lsf
+
+This repository is configured for Git LFS but 'git-lfs' was not found on your path. If you no longer wish to use Git LFS, remove this hook by deleting the 'pre-push' file in the hooks directory (set by 'core.hookspath'; usually '.git/hooks').
+
+error: failed to push some refs to
+
+                rm .git/hooks/pre-push
