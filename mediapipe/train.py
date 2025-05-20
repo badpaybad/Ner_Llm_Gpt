@@ -18,12 +18,12 @@ import matplotlib.pyplot as plt
 import matplotlib
 print(matplotlib.matplotlib_fname())
 print(rcsetup.all_backends)
-guibackend = "Qt5Agg"
-matplotlib.use(guibackend)
-plt.switch_backend(guibackend)
+# guibackend = "Qt5Agg"
+# matplotlib.use(guibackend)
+# plt.switch_backend(guibackend)
 # # plt.style.use('ggplot')
 
-matplotlib.rcParams['backend'] = guibackend
+# matplotlib.rcParams['backend'] = guibackend
 print(f"Interactive mode: {matplotlib.is_interactive()}")
 print(f"matplotlib backend: {matplotlib.rcParams['backend']}")
 
@@ -165,3 +165,24 @@ print(finalmodel)
 # print(f"QAT validation coco metrics: {qat_coco_metrics}")
 
 # model.export_model('model_int8_qat.tflite')
+
+"""
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt update
+
+sudo apt install software-properties-common
+
+sudo apt install python3.9 python3.9-venv python3.9-dev
+
+rm -rf venv_mediapipe
+python3.9 -m venv venv_mediapipe
+source venv_mediapipe/bin/activate
+
+
+git clone https://github.com/google/mediapipe.git
+cd mediapipe/mediapipe/model_maker
+
+pip install -r requirements.txt
+pip install .
+
+"""

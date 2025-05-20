@@ -104,7 +104,7 @@ gpu https://github.com/ollama/ollama/blob/main/docs/gpu.md
                 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
                 https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#next-steps
 
-                sudo docker run --gpus all -p 15000:11434 ollama/ollama
+                sudo docker run --gpus all -p 11434:11434 ollama/ollama
 
                 https://hub.docker.com/r/ollama/ollama
 
@@ -113,22 +113,24 @@ gpu https://github.com/ollama/ollama/blob/main/docs/gpu.md
                 The --gpus all flag tells Docker to use all available GPUs. You can specify particular GPUs if needed (e.g., --gpus '"device=0,1"').
 
                 docker pull ollama/ollama:latest
-                docker run -d -p 15000:11434 ollama/ollama
+                docker run -d -p 11434:11434 ollama/ollama
 
-                docker exec -it {id container}> ollama pull mistral
+                docker exec -it {id container} ollama pull mistral
                 docker exec -it f455d69e6edcd67678b8924c44eebe1b936ec295a0ef2af7a2051abe7cb57e69 ollama pull mistral
 
                 https://ollama.com/library
 
 # working on gpu 3060 8GB
 
-                    sudo docker run --gpus all -p 15000:11434 ollama/ollama
+                    sudo docker run --gpus==all -p 15000:11434 ollama/ollama
                     sudo docker exec -it 7b666f429917 ollama pull gemma2
                                 
+                    sudo docker run --device /dev/kfd --device /dev/dri --security-opt seccomp=unconfined -p 15000:11434 ollama/ollama
 
+                docker exec -it 495346dbcfcaf70eaf3dcc7d905223ba2b5cb8ecca6ff0dc416e4769a79201f2 ollama pull gemma2
 
-                docker exec -it f455d69e6edcd67678b8924c44eebe1b936ec295a0ef2af7a2051abe7cb57e69 ollama pull gemma2
-                docker exec -it f455d69e6edcd67678b8924c44eebe1b936ec295a0ef2af7a2051abe7cb57e69 ollama pull gemma2:27b
+                docker exec -it 9dd1e5a00fc4cf8418d41d824c127564d4d1da9d467b7db1ca17fa27add00d7e ollama pull gemma2
+                docker exec -it 9dd1e5a00fc4cf8418d41d824c127564d4d1da9d467b7db1ca17fa27add00d7e ollama pull gemma2:27b
 # api usage
 
 https://www.postman.com/bstraehle/workspace/generative-ai-llm-rest-apis/documentation/7643177-2ea8088c-43df-440a-b6de-4a84ac3fa60c

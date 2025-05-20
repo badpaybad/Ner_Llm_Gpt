@@ -1,3 +1,5 @@
+mediapipe/mediapipe/** 
+**/venv_mediapipe/**
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

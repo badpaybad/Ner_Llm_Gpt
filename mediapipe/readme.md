@@ -30,8 +30,11 @@ convert others format to coco format, then use mediapipe to train
                 sudo apt-get install libgtk-3-dev
 
                 python3 -m pip install --upgrade pip                
-                pip3 install -U tensorflow mediapipe mediapipe_model_maker  PyQt5
+                pip3 install -U tensorflow mediapipe mediapipe_model_maker opencv-python opencv-contrib-python  PyQt5
+               
                 pip3 install -U opencv-python opencv-contrib-python 
+                 pip3 install -U mediapipe
+                  pip3 install -U mediapipe_model_maker
 
 # chu nom dir struct
 
