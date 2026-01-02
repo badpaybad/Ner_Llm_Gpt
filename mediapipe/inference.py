@@ -1,6 +1,9 @@
 
 # inference https://github.com/google-edge-ai/mediapipe-samples/blob/main/examples/object_detection/python/object_detector.ipynb
-
+import os
+os.environ["QT_QPA_PLATFORM"] = "xcb"
+# os.environ["QT_QPA_PLATFORM"] = "wayland"
+# QT_QPA_PLATFORM=wayland
 
 # STEP 1: Import the necessary modules.
 import matplotlib
@@ -11,6 +14,10 @@ from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 import cv2
 
+# model_asset_path = '/work/Ner_Llm_Gpt/mediapipe/exported_model/model.tflite'
+# file_asset_path = "/work/Ner_Llm_Gpt/mediapipe/nlvnpf-0137-01-045.jpg"
+
+from config import model_asset_path,file_asset_path
 
 MARGIN = 10  # pixels
 ROW_SIZE = 10  # pixels
@@ -52,7 +59,7 @@ def visualize(
 
 # STEP 2: Create an ObjectDetector object.
 base_options = python.BaseOptions(
-    model_asset_path='/work/llm/Ner_Llm_Gpt/mediapipe/exported_model/model.tflite')
+    model_asset_path=model_asset_path)
 options = vision.ObjectDetectorOptions(base_options=base_options,
                                        score_threshold=0.5)
 detector = vision.ObjectDetector.create_from_options(options)
@@ -102,9 +109,9 @@ def check_tflite_in_out_info(modelpathfile):
 
 check_tflite_in_out_info(base_options.model_asset_path)
 
-check_tflite_in_out_info("/work/llm/Ner_Llm_Gpt/mediapipe/updated_resnet100.tflite")
+# check_tflite_in_out_info("/work/Ner_Llm_Gpt/mediapipe/updated_resnet100.tflite")
 
-check_tflite_in_out_info("/work/innovation-ads/innovationads/assets/face_extract_feature/model.tflite")
+# check_tflite_in_out_info("/work/innovation-ads/innovationads/assets/face_extract_feature/model.tflite")
 
 # # Hypothetical function (not real MediaPipe code)
 # input_shape = detector.get_input_shape()
@@ -118,7 +125,7 @@ check_tflite_in_out_info("/work/innovation-ads/innovationads/assets/face_extract
 image = mp.Image.create_from_file(
     # "/home/dunp/Downloads/android_figurine/train/images/IMG_0509.jpg"
     # "/work/cloud/cloud.mldlai/test/new.jpg.txt.jpg"
-    "/work/llm/Ner_Llm_Gpt/mediapipe/nlvnpf-0137-01-045.jpg"
+    file_asset_path
 )
 print("# STEP 3: Load the input image.")
 # STEP 4: Detect objects in the input image.
@@ -135,10 +142,21 @@ cv2.imwrite("detected.jpg", rgb_annotated_image)
 
 print("STEP 6: Save detected image")
 
-cv2.imshow("Image", rgb_annotated_image)
+# cv2.imshow("Image", rgb_annotated_image)
 
-cv2.waitKey(0)
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
+
+while True:
+    cv2.imshow("Window", rgb_annotated_image)
+    
+    # Wait 100ms for a key press. If 'q' is pressed, break.
+    # Using & 0xFF is good practice for 64-bit machines
+    if cv2.waitKey(100) & 0xFF == ord('q'):
+        break
+
 cv2.destroyAllWindows()
+
 # import matplotlib
 # import matplotlib.rcsetup as rcsetup
 # print(matplotlib.matplotlib_fname())

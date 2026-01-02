@@ -4,7 +4,14 @@ import os
 import cv2
 import shutil
 import json
-sourceChuNomFolder = "/work/llm/Ner_Llm_Gpt/mediapipe/train-val"
+# sourceChuNomFolder = "/work/Ner_Llm_Gpt/mediapipe/train-val"
+# cocoChuNomFolder = "/work/Ner_Llm_Gpt/mediapipe/chunomdataset"
+# cocoChuNomFolderTrain = "/work/Ner_Llm_Gpt/mediapipe/chunomdataset/train"
+# cocoChuNomFolderValid = "/work/Ner_Llm_Gpt/mediapipe/chunomdataset/valid"
+# cocoChuNomFolderTrainImages = "/work/Ner_Llm_Gpt/mediapipe/chunomdataset/train/images"
+# cocoChuNomFolderValidImages = "/work/Ner_Llm_Gpt/mediapipe/chunomdataset/valid/images"
+
+from config import sourceChuNomFolder,cocoChuNomFolder,cocoChuNomFolderTrain,cocoChuNomFolderValid,cocoChuNomFolderTrainImages,cocoChuNomFolderValidImages
 
 # class x center y center width height
 # ./wb_localization_dataset/labels/val/nlvnpf-0137-01-045.txt
@@ -38,11 +45,6 @@ def create_directory_if_not_exists(directory):
         print(f"Directory '{directory}' already exists.")
 
 
-cocoChuNomFolder = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset"
-cocoChuNomFolderTrain = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset/train"
-cocoChuNomFolderValid = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset/valid"
-cocoChuNomFolderTrainImages = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset/train/images"
-cocoChuNomFolderValidImages = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset/valid/images"
 create_directory_if_not_exists(cocoChuNomFolder)
 create_directory_if_not_exists(cocoChuNomFolderTrain)
 create_directory_if_not_exists(cocoChuNomFolderValid)

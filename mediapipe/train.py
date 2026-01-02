@@ -4,6 +4,7 @@
 # https://github.com/google-edge-ai/mediapipe-samples/blob/main/examples/customization/object_detector.ipynb
 # sudo apt-get install python3-tk
 # pip install ipympl
+from config import train_dataset_path, validation_dataset_path
 import tensorflow as tf
 import json
 import os
@@ -38,8 +39,9 @@ print(f"matplotlib backend: {matplotlib.rcParams['backend']}")
 # pip install -U jaxlib==0.4.12
 assert tf.__version__.startswith('2')
 
-train_dataset_path = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset/train"
-validation_dataset_path = "/work/llm/Ner_Llm_Gpt/mediapipe/chunomdataset/valid"
+# train_dataset_path = "/work/Ner_Llm_Gpt/mediapipe/chunomdataset/train"
+# validation_dataset_path = "/work/Ner_Llm_Gpt/mediapipe/chunomdataset/valid"
+
 
 with open(os.path.join(train_dataset_path, "labels.json"), "r") as f:
     labels_json = json.load(f)
@@ -113,6 +115,10 @@ python3 -c "from tkinter import Tk; Tk().mainloop()"
 
 """
 
+# 1. Tạo một Callback để ghi log vào file CSV
+csv_logger = tf.keras.callbacks.CSVLogger(
+    'training_log.csv', append=True, separator=',')
+
 # visualize(train_dataset_path, 9)
 train_data = object_detector.Dataset.from_coco_folder(
     train_dataset_path)  # , cache_dir="/tmp/od_data/train")
@@ -124,30 +130,34 @@ print("validation_data size: ", validation_data.size)
 spec = object_detector.SupportedModels.MOBILENET_MULTI_AVG
 # spec = object_detector.SupportedModels.MOBILENET_V2
 # https://developers.google.com/mediapipe/api/solutions/python/mediapipe_model_maker/object_detector/SupportedModels
+
+
+epochs_per_loop = 1000
+
 hparams = object_detector.HParams(
-    learning_rate=0.1,
+    learning_rate=0.3,
     batch_size=16,
-    epochs=10000,
+    epochs=epochs_per_loop,
     export_dir='exported_model')
 options = object_detector.ObjectDetectorOptions(
     supported_model=spec,
     hparams=hparams
 )
 
-
 model = object_detector.ObjectDetector.create(
     train_data=train_data,
     validation_data=validation_data,
     options=options,
-    )
+)
 
 loss, coco_metrics = model.evaluate(validation_data, batch_size=1)
 print(f"Validation loss: {loss}")
 print(f"Validation coco metrics: {coco_metrics}")
 
 finalmodel = model.export_model()
+# finalmodel = model.export_model(
+#     f'model_epoch_{(i+1)*epochs_per_loop}.tflite')
 print(finalmodel)
-
 
 
 """for cpu"""

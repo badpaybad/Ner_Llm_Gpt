@@ -267,3 +267,8 @@ deepfacefake/weights/vncorenlp/models/wordsegmenter/wordsegmenter.rdr
 deepfacefake/weights/voices/encoder.pt
 deepfacefake/weights/voices/synthesizer.pt
 deepfacefake/weights/voices/vocoder.pt
+mediapipe/yolov8_fixed.tflite
+mediapipe/yolov8_quantized.tflite
+mediapipe/tmp/backup_training/chief/checkpoint
+mediapipe/tmp/backup_training/chief/ckpt-14.data-00000-of-00001
+mediapipe/tmp/backup_training/chief/ckpt-14.index
