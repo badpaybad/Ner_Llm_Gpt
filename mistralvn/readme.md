@@ -1,9 +1,4 @@
-# ram or vram require min 12GB
-
-sudo apt install python3 python3-pip
-pip3 install -U fastapi uvicorn imutils python-multipart pydantic easydict jwcrypto unidecode requests
-pip3 install -U torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-pip3 install -U transformers accelerate bitsandbytes
+pip install jiwer gradio typing-extensions fastapi
 
 # Convert huggingface model to gguf and build docker image to run in CPU
 
@@ -34,6 +29,8 @@ convert.py in folder llama.cpp cloned
 
 4. build docker image and run
 
+                python "/work/llm/llama.cpp/convert.py" "/work/llm/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat" --outfile "/work/llm/Ner_Llm_Gpt/mistralvn/Vistral-7B-Chat.gpu.gguf" --outtype q8_0
+
                 
                 copy build/bin to mistravn/bin (in step 2)
 
@@ -47,6 +44,12 @@ convert.py in folder llama.cpp cloned
 
                 /work/llama.cpp/build/bin/server -m '/work/llama.cpp/Vistral-7B-Chat.gguf' -c 2048 --host 0.0.0.0 --port 8880
                 
+# ram or vram require min 4GB
+
+sudo apt install python3 python3-pip
+pip3 install -U fastapi uvicorn imutils python-multipart pydantic easydict jwcrypto unidecode requests
+pip3 install -U torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+pip3 install -U transformers accelerate bitsandbytes
 
 # draft                
 
@@ -71,7 +74,11 @@ NVIDIA
                 mkdir build
                 cd build
                 export CUDACXX=/usr/local/cuda-12/bin/nvcc
+                export CMAKE_CUDA_COMPILER=/usr/local/cuda-12/bin/nvcc
                 cmake .. -DLLAMA_CUDA=ON
+
+                cmake .. -DLLAMA_CUDA=ON -DCMAKE_CUDA_COMPILER=/usr/local/cuda-12/bin/nvcc -DCUDAToolkit_ROOT=/usr/local/cuda-12
+
                 cmake --build . --config Release
 
 AMD
@@ -146,6 +153,8 @@ sudo apt install "linux-headers-$(uname -r)" "linux-modules-extra-$(uname -r)"
 
 
                 https://oauth:...your token..@huggingface.co/Viet-Mistral/Vistral-7B-Chat
+
+                
 
 # XNDA amd npu
 

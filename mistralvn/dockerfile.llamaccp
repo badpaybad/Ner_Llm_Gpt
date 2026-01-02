@@ -1,18 +1,18 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-
 USER root
 WORKDIR /app 
-
 RUN apt-get update &&  apt-get install -y build-essential git libc6
-
 EXPOSE 8880
-
 COPY /bin/ /app/bin/
-COPY /Vistral-7B-Chat.gguf /app/Vistral-7B-Chat.gguf
 
+COPY /favicon.ico /app/favicon.ico
+COPY /favicon.png /app/favicon.png
+
+COPY /Vistral-7B-Chat.gguf /app/Vistral-7B-Chat.gguf
 ENV LC_ALL=C.utf8
-#./server -m "/work/llm/llama.cpp/Vistral-7B-Chat.gguf" -c 2048
 CMD [ "/bin/sh", "-c", "./bin/server -m '/app/Vistral-7B-Chat.gguf' -c 2048 --host 0.0.0.0 --port 8880"]
+
+#./server -m "/work/llm/llama.cpp/Vistral-7B-Chat.gguf" -c 2048
 
 #sudo apt update && sudo apt install -y git python3-pip python3-venv python3-dev libstdc++-12-dev 
 # docker build -f dockerfile.llamaccp -t llama-vistral7b .

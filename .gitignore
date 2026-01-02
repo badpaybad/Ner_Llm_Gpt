@@ -1,3 +1,5 @@
+mediapipe/mediapipe/** 
+**/venv_mediapipe/**
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -188,3 +190,85 @@ chatgpt4api/config.py
 amdgpu-install_6.0.60003-1_all.deb
 **/bin/**
 **.gguf
+**/bin.gpu/**
+mediapipe/exported_model/**
+**/train-val/**
+**/hannomdataset/**
+**/chunomdataset/**
+**/exported_model_1000epoch/**
+mediapipe/updated_resnet100.tflite
+gemma/test.py
+mediapipe/exported_model1/float_ckpt.data-00000-of-00001
+mediapipe/exported_model1/float_ckpt.index
+mediapipe/exported_model1/metadata.json
+mediapipe/exported_model1/model.tflite
+mediapipe/face_detect_live/config.json
+mediapipe/face_detect_live/model_1.bin
+mediapipe/face_detect_live/model_1.param
+mediapipe/face_detect_live/model_2.bin
+mediapipe/face_detect_live/model_2.param
+mediapipe/face_detection/det1.bin
+mediapipe/face_detection/det1.param
+mediapipe/face_detection/det2.bin
+mediapipe/face_detection/det2.param
+mediapipe/face_detection/det3.bin
+mediapipe/face_detection/det3.param
+mediapipe/face_extract_feature/face.bin
+mediapipe/face_extract_feature/face.param
+mediapipe/face_extract_feature/model.tflite
+deepfacefake/weights/1 (1).jpg
+deepfacefake/weights/1 (2).jpg
+deepfacefake/weights/1 (3).jpg
+deepfacefake/weights/1 (4).jpg
+deepfacefake/weights/1 (5).jpg
+deepfacefake/weights/1 (6).jpg
+deepfacefake/weights/coco.names
+deepfacefake/weights/dlib_face_recognition_resnet_model_v1.dat
+deepfacefake/weights/download.png
+deepfacefake/weights/du2.png
+deepfacefake/weights/ducam1.jpg
+deepfacefake/weights/ducmnd.jpg
+deepfacefake/weights/dunp.png
+deepfacefake/weights/haarcascade_eye_tree_eyeglasses.xml
+deepfacefake/weights/haarcascade_eye.xml
+deepfacefake/weights/haarcascade_frontalface_default.xml
+deepfacefake/weights/haarcascade_lefteye_2splits.xml
+deepfacefake/weights/haarcascade_mcs_mouth.xml
+deepfacefake/weights/haarcascade_mcs_nose.xml
+deepfacefake/weights/haarcascade_righteye_2splits.xml
+deepfacefake/weights/haarcascade_smile.xml
+deepfacefake/weights/insightface-resnet100.onnx
+deepfacefake/weights/mmod_human_face_detector.dat
+deepfacefake/weights/openpose_pose_coco.prototxt
+deepfacefake/weights/pose_deploy.prototxt
+deepfacefake/weights/pose_iter_102000.caffemodel
+deepfacefake/weights/pose_iter_440000.caffemodel
+deepfacefake/weights/print-attack_ycrcb_luv_extraTreesClassifier.pkl
+deepfacefake/weights/replay-attack_ycrcb_luv_extraTreesClassifier.pkl
+deepfacefake/weights/shape_predictor_5_face_landmarks.dat
+deepfacefake/weights/shape_predictor_68_face_landmarks.dat
+deepfacefake/weights/The-106-point-landmark-make-up.png
+deepfacefake/weights/urldownload.txt
+deepfacefake/weights/wav2vec_large.pt
+deepfacefake/weights/wav2vec2_fairseq_base_ls960_asr_ls960.pth
+deepfacefake/weights/yolov4.cfg
+deepfacefake/weights/yolov4.weights
+deepfacefake/weights/models/updated_resnet100.onnx
+deepfacefake/weights/models/buffalo_l/2d106det.onnx
+deepfacefake/weights/models/buffalo_l/det_10g.onnx
+deepfacefake/weights/vncorenlp/VnCoreNLP-1.2.jar
+deepfacefake/weights/vncorenlp/models/dep/vi-dep.xz
+deepfacefake/weights/vncorenlp/models/ner/vi-500brownclusters.xz
+deepfacefake/weights/vncorenlp/models/ner/vi-ner.xz
+deepfacefake/weights/vncorenlp/models/ner/vi-pretrainedembeddings.xz
+deepfacefake/weights/vncorenlp/models/postagger/vi-tagger
+deepfacefake/weights/vncorenlp/models/wordsegmenter/vi-vocab
+deepfacefake/weights/vncorenlp/models/wordsegmenter/wordsegmenter.rdr
+deepfacefake/weights/voices/encoder.pt
+deepfacefake/weights/voices/synthesizer.pt
+deepfacefake/weights/voices/vocoder.pt
+mediapipe/yolov8_fixed.tflite
+mediapipe/yolov8_quantized.tflite
+mediapipe/tmp/backup_training/chief/checkpoint
+mediapipe/tmp/backup_training/chief/ckpt-14.data-00000-of-00001
+mediapipe/tmp/backup_training/chief/ckpt-14.index

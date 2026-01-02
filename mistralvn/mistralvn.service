@@ -1,0 +1,23 @@
+# sudo nano /etc/systemd/system/mistralvn.service
+
+
+[Unit]
+Description=mistralvn
+After=network.target
+
+[Service]
+User=emas_ops
+#Group=youruser
+WorkingDirectory=/home/emas_ops/llm/Ner_Llm_Gpt/mistralvn
+ExecStart=python3 /home/emas_ops/llm/Ner_Llm_Gpt/mistralvn/main.py 8880 cpu
+Restart=always
+RestartSec=5
+#Environment="PATH=/home/youruser/myapp/venv/bin"
+
+[Install]
+WantedBy=multi-user.target
+
+#sudo systemctl daemon-reload
+#sudo systemctl enable mistralvn.service
+#sudo systemctl restart mistralvn.service
+#sudo systemctl status mistralvn.service

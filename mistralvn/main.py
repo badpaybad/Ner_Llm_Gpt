@@ -1,3 +1,18 @@
+from fastapi.security import HTTPBearer, OAuth2PasswordBearer
+import uuid
+from asyncio import sleep as async_sleep
+from contextlib import asynccontextmanager
+from anyio import CapacityLimiter
+from anyio.lowlevel import RunVar
+from fastapi import FastAPI, File, Form, UploadFile, Request, Response
+from fastapi.responses import HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, RedirectResponse
+from fastapi import Depends, HTTPException
+from fastapi.staticfiles import StaticFiles
+from pydantic import ValidationError
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from fastapi import FastAPI
 import os
 import datetime
 import math
@@ -5,8 +20,10 @@ import sys
 import threading
 import re
 import uvicorn
-
+from pydantic import BaseModel
+from typing import List, Optional
 import torch
+
 # pip3 install -U torch==1.8.1 torchvision==0.9.1 torchaudio==0.8.1 --index-url https://download.pytorch.org/whl/cpu
 
 # pip3 install install torch==2.1.0+cpu torchvision==0.16.0 torchaudio==2.1.0  --index-url https://download.pytorch.org/whl/cpu
@@ -18,7 +35,7 @@ sys.path.insert(1, ____workingDir)
 
 print("____workingDir", ____workingDir)
 
-os.environ["PYTORCH_HIP_ALLOC_CONF"]="expandable_segments:True"
+os.environ["PYTORCH_HIP_ALLOC_CONF"] = "expandable_segments:True"
 # path = os.environ["HIP_LAUNCH_BLOCKING"]="1"
 # os.environ["PYTORCH_USE_CUDA_DSA"] = "1"
 # os.environ["HIP_VISIBLE_DEVICES"] = "0"
@@ -29,21 +46,89 @@ os.environ["PYTORCH_HIP_ALLOC_CONF"]="expandable_segments:True"
 # os.environ["HCC_AMDGPU_TARGET"] = "gfx1103"
 # os.environ["HSA_OVERRIDE_GFX_VERSION"] = "11.0.0"
 
-print(f"CUDA support: {torch.cuda.is_available()} (Should be \"True\")")
-print(f"CUDA version: {torch.version.cuda} (Should be \"None\")")
+print(f'CUDA support: {torch.cuda.is_available()} (Should be "True")')
+print(f'CUDA version: {torch.version.cuda} (Should be "None")')
 print(f"HIP version: {torch.version.hip} (Should contain value)")
 
 print(f"torch.cuda.is_available(): {torch.cuda.is_available()}")
-    
-device_type="cuda"
-if len(sys.argv)>2:
-    device_type = str(sys.argv[2])
-    
-if device_type==None or device_type=="":
-    device_type="cpu"
-    
-print(f"device_type try to use: {device_type}")
+# print(torch.cuda.memory_summary())
 
+class EmbeddingRequest(BaseModel):
+    input: str
+    encoding_format: "float"
+    model: str = ""
+
+
+class Embedding(BaseModel):
+    object: str = "embedding"
+    embedding: List[float]
+    index: int = 0
+
+
+class Usage(BaseModel):
+    prompt_tokens: int = 0
+    total_tokens: int = 0
+    completion_tokens: int = 0
+
+
+class EmbeddingResponse(BaseModel):
+    object: str="List"
+    data: List[Embedding]
+    model: str
+    usage: Usage
+
+
+class Message(BaseModel):
+    role: str="user"
+    content: str="Hello"
+
+
+class ConversationRequest(BaseModel):
+    conversationid: str = f"{uuid.uuid4()}"
+
+
+class ChatRequest(BaseModel):
+    model: str = "Vistral-7B-Chat"
+    messages: List[Message]
+    temperature: float = 1
+    max_tokens: int = 1024
+    do_sample: bool = True
+    top_p: Optional[float] = 0.95
+    top_k: Optional[int] = 40
+    repetition_penalty: float = 0.95
+    conversationid: str = f"{uuid.uuid4()}"
+    tools: Optional[str] = None
+    requestid: str = f"{uuid.uuid4()}"
+    skip_special_tokens: bool = True
+
+
+class Choice(BaseModel):
+    message: Message
+    finish_reason: Optional[str] = None
+    index: int = 0
+
+class ChatResponse(BaseModel):
+    id: str
+    object: str
+    created: int
+    model: str
+    choices: List[Choice]
+    conversationid: str = f"{uuid.uuid4()}"
+    tools: Optional[str] = None
+    requestid: str = f"{uuid.uuid4()}"
+    elapsed_in_milis: float = 0
+
+
+_http_port = str(sys.argv[1])
+
+device_type = "cuda"
+if len(sys.argv) > 2:
+    device_type = str(sys.argv[2])
+
+if device_type == None or device_type == "":
+    device_type = "cpu"
+
+print(f"device_type try to use: {device_type}")
 
 # torch.cuda.empty_cache()
 # import gc
@@ -58,8 +143,6 @@ system_prompt = "Bạn là một trợ lí Tiếng Việt nhiệt tình và trun
 system_prompt += "Câu trả lời của bạn không nên chứa bất kỳ nội dung gây hại, phân biệt chủng tộc, phân biệt giới tính, độc hại, nguy hiểm hoặc bất hợp pháp nào. Hãy đảm bảo rằng các câu trả lời của bạn không có thiên kiến xã hội và mang tính tích cực."
 system_prompt += "Nếu một câu hỏi không có ý nghĩa hoặc không hợp lý về mặt thông tin, hãy giải thích tại sao thay vì trả lời một điều gì đó không chính xác. Nếu bạn không biết câu trả lời cho một câu hỏi, hãy trẳ lời là bạn không biết và vui lòng không chia sẻ thông tin sai lệch."
 
-from fastapi import FastAPI
-from transformers import AutoModelForCausalLM, AutoTokenizer
 # pip3 install -U --pre torch torchvision torchaudio transformers --index-url https://download.pytorch.org/whl/nightly/rocm6.0
 """
 sudo apt update
@@ -81,38 +164,30 @@ ln -s /var/lib/dkms/amdgpu/6.3.6-1739731.22.04/source /var/lib/dkms/amdgpu/6.3.6
 # "name":"tên người ở đây",
 # "hometown":"tên quê quán",
 # "summary":"tóm tắt đoạn văn"
-# } 
+# }
 # """
-
-tokenizer = AutoTokenizer.from_pretrained('Vistral-7B-Chat')
+# modelpath = "/work/shared/vicuna-7b-v1.5"
+# modelpath = "/work/shared/gemma-2-2b"
+modelpath = "/work/shared/Vistral-7B-Chat"
+tokenizer = AutoTokenizer.from_pretrained(modelpath)
 model = AutoModelForCausalLM.from_pretrained(
-    'Vistral-7B-Chat',
-    torch_dtype=torch.bfloat16, # change to torch.float16 if you're using V100
+    modelpath,
+    # torch_dtype=torch.bfloat16,  # change to torch.float16 if you're using V100
     device_map=device_type,
-    use_cache=True,
+    use_cache=False,
 )
 
-conversation = [{"role": "system", "content": system_prompt }]
 
+# Move the model to the NPU
+device = torch.device(device_type)
+model.to(device)
 
-from pydantic import ValidationError
-from fastapi.staticfiles import StaticFiles
-from fastapi.security import HTTPBearer,OAuth2PasswordBearer
-from fastapi import Depends, HTTPException
-from fastapi.responses import FileResponse, RedirectResponse
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
-from fastapi import FastAPI, File, Form, UploadFile, Request, Response
+conversation = [{"role": "system", "content": system_prompt}]
 
-
-from anyio.lowlevel import RunVar
-from anyio import CapacityLimiter
-from contextlib import asynccontextmanager
 # @webApp.on_event("startup")
 # def startup():
 #     print("start")
 #     RunVar("_default_thread_limiter").set(CapacityLimiter(2))
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -122,9 +197,7 @@ async def lifespan(app: FastAPI):
     print(model)
     yield
     # Clean up the ML models and release the resources
-    
 
-from asyncio import sleep as async_sleep
 
 webApp = FastAPI(lifespan=lifespan)
 
@@ -133,8 +206,7 @@ isExist_static = os.path.exists(folder_static)
 if not isExist_static:
     os.makedirs(folder_static)
 
-webApp.mount(folder_static, StaticFiles(
-    directory=folder_static), name="static")
+webApp.mount(folder_static, StaticFiles(directory=folder_static), name="static")
 
 webApp.add_middleware(
     CORSMiddleware,
@@ -144,51 +216,60 @@ webApp.add_middleware(
     allow_headers=["*"],
 )
 
-conversation_sessions={}
-import uuid
+conversation_sessions = {}
+
 
 @webApp.post("/apis/llm/get")
-async def llm_get(conversationid:str=Form(f"{uuid.uuid4()}")):
+async def llm_get(conversationid: str = Form(f"{uuid.uuid4()}")):
     uuid.UUID(conversationid)
     if conversationid not in conversation_sessions.keys():
-        return {
-            "ok":0,
-            "history":[]
-        }
-    
-    return{
-        "ok":1,
-        "history": conversation_sessions[conversationid]
-    }
-    pass
-    
-@webApp.post("/apis/llm/ask")
-async def llm_ask(msg:str=Form(None),conversationid:str=Form(f"{uuid.uuid4()}"), systemguideline:str=Form(system_prompt),):
-    uuid.UUID(conversationid)
-    # try:
-    #     f = open(f"{conversationid}.txt", "a")
-    #     f.write(f"{msg}\r\n")
-    #     f.close()
-    # except:
-    #     pass
-    conversation=[]
-    if conversationid not in conversation_sessions.keys():
-        if systemguideline==None or systemguideline=="":
-            conversation = [{"role": "system", "content": system_prompt }]
-        else:
-            conversation = [{"role": "system", "content": systemguideline }]
-            
-        conversation_sessions[conversationid]=conversation     
-    else:
-        conversation= conversation_sessions[conversationid]
+        return {"ok": 0, "history": []}
 
-    t1= datetime.datetime.now().timestamp()
-    conversation.append({"role": "user", "content": msg })
+    return {"ok": 1, "history": conversation_sessions[conversationid]}
+    pass
+
+
+# Define a chat template function
+def vicuna_apply_chat_template(user_input):
+    return f"<|user|>: {user_input} <|bot|>:"
+
+
+# Define a custom chat template function
+def gemma_apply_chat_template(messages):
+    chat_history = ""
+    for message in messages:
+        chat_history += f"{message['role']}: {message['content']}\n"
+    return chat_history
+
+@webApp.post("/apis/llm/ask")
+async def llm_ask(
+    msg: str = Form(None),
+    conversationid: str = Form(f"{uuid.uuid4()}"),
+    systemguideline: str = Form(system_prompt),
+):
+    uuid.UUID(conversationid)
+    conversation = []
+    if conversationid not in conversation_sessions.keys():
+        if systemguideline == None or systemguideline == "":
+            conversation = [{"role": "system", "content": system_prompt}]
+        else:
+            conversation = [{"role": "system", "content": systemguideline}]
+
+        conversation_sessions[conversationid] = conversation
+    else:
+        conversation = conversation_sessions[conversationid]
+
+    t1 = datetime.datetime.now().timestamp()
+    conversation.append({"role": "user", "content": msg})
+
+    # input_ids = tokenizer.apply_chat_template(conversation, return_tensors="pt").to(
+    #     model.device
+    # )
+    input_ids = tokenizer(gemma_apply_chat_template(conversation), return_tensors="pt").to(model.device)
     
-    input_ids = tokenizer.apply_chat_template(conversation, return_tensors="pt").to(model.device)
     out_ids = model.generate(
         input_ids=input_ids,
-        #max_new_tokens=768,
+        # max_new_tokens=768,
         max_new_tokens=512,
         pad_token_id=2,
         do_sample=True,
@@ -197,17 +278,136 @@ async def llm_ask(msg:str=Form(None),conversationid:str=Form(f"{uuid.uuid4()}"),
         temperature=0.1,
         repetition_penalty=1.05,
     )
-    assistant = tokenizer.batch_decode(out_ids[:, input_ids.size(1): ], skip_special_tokens=True)[0].strip()    
-    conversation.append({"role": "assistant", "content": assistant })
+    assistant = tokenizer.batch_decode(
+        out_ids[:, input_ids.size(1) :], skip_special_tokens=True
+    )[0].strip()
+    conversation.append({"role": "assistant", "content": assistant})
+
+    conversation_sessions[conversationid] = conversation
+    t2 = datetime.datetime.now().timestamp()
+    return {"ok": 1, "content": assistant, "elapsed": t2 - t1}
+
+    pass
+
+
+conversation_sessions_gpt_similar = {}
+
+
+@webApp.post("/api/chat/get")
+async def llm_chat_get(request: ConversationRequest):
+    if request.conversationid in conversation_sessions_gpt_similar.keys():
+        return conversation_sessions_gpt_similar[request.conversationid]
+        pass
+
+    return []
+
+
+@webApp.post("/v1/embeddings")
+async def llm_embedin(request: EmbeddingRequest):
+
+    inputs = tokenizer(request.input, return_tensors="pt")
+
+    # Generate embeddings
+    with torch.no_grad():
+        outputs = model(**inputs, output_hidden_states=True)
+        embeddings = outputs.hidden_states[-1]
+
+    embedding = torch.mean(embeddings, dim=1).squeeze().numpy().tolist()
+        
+        # Create an Embedding instance
+    embedding_instance = Embedding(
+        object="embedding",
+        embedding=embedding,
+        index=0
+    )
+
+    # Create a Usage instance
+    usage_instance = Usage(
+        prompt_tokens=0,
+        total_tokens=0
+    )
+
+
+        # Create an EmbeddingResponse instance
+    embedding_response = EmbeddingResponse(
+        object="list",
+        data=[embedding_instance],
+        model="vistral-7b",
+        usage=usage_instance
+    )
+
+
+    return embedding_response
+    pass
+
+
+@webApp.post("/v1/chat/completions")
+async def llm_chat_completion(request: ChatRequest):
+    print("request-----------B")
+    print(request)
+    print("request-----------E")
+    t1 = datetime.datetime.now().timestamp() * 1000
+
+    if request.conversationid not in conversation_sessions_gpt_similar.keys():
+        conversation_sessions_gpt_similar[request.conversationid] = request
+        pass
+
+    # input_ids = tokenizer.apply_chat_template(request.messages, return_tensors="pt").to(
+    #     model.device
+    # )
     
-    conversation_sessions[conversationid]=conversation   
-    t2= datetime.datetime.now().timestamp()
-    return {
-        "ok":1,
-        "content": assistant,
-        "elapsed": t2-t1
-    }
+    input_ids = tokenizer(gemma_apply_chat_template(conversation),return_tensors="pt").to(model.device)
     
+    out_ids = model.generate(
+        **input_ids,
+        # max_new_tokens=768,
+        max_new_tokens=request.max_tokens,
+        pad_token_id=2,
+        do_sample=request.do_sample,
+        top_p=request.top_p,
+        top_k=request.top_k,
+        temperature=request.temperature,
+        repetition_penalty=request.repetition_penalty,
+    )
+    # assistants = tokenizer.batch_decode(
+    #     out_ids[:, input_ids.size(1) :], skip_special_tokens=request.skip_special_tokens
+    # )
+    assistants = tokenizer.batch_decode( out_ids ,skip_special_tokens=request.skip_special_tokens)
+    
+    # print(assistant)
+
+    choices = []
+    for idx, assistant in enumerate(assistants):
+        print(request.requestid)
+        print(assistant)
+        msg = Message(role="assistant", content=assistant.strip())
+
+        request.messages.append(msg)
+        choice = Choice(message=msg, finish_reason="stop", index=idx)
+        choices.append(choice)
+
+    conversation_sessions_gpt_similar[request.conversationid] = request
+
+    response_id = str(uuid.uuid4())
+    response_object = "chat.completion"
+    response_created = int(datetime.datetime.utcnow().timestamp())
+
+    t2 = datetime.datetime.now().timestamp() * 1000
+
+    chat_response = ChatResponse(
+        id=response_id,
+        object=response_object,
+        created=response_created,
+        model=request.model,
+        choices=choices,
+        conversationid=request.conversationid,
+        tools=None,
+        requestid=request.requestid,
+        elapsed_in_milis=t2 - t1,
+    )
+
+    return chat_response
+
     pass
 
 
@@ -216,15 +416,14 @@ async def root():
     return RedirectResponse("/docs")
     return "swagger API docs: /docs"
 
+
 def runUvicorn(port):
     uvicorn.run(webApp, host="0.0.0.0", port=int(port), log_level="info")
 
-_http_port = str(sys.argv[1])
 
-
-if __name__ == "__main__":   
+if __name__ == "__main__":
     runUvicorn(_http_port)
-    
+
 # pip install -U torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/rocm5.7
 
 # while True:
@@ -238,7 +437,7 @@ if __name__ == "__main__":
 
 #     conversation.append({"role": "user", "content": human })
 #     input_ids = tokenizer.apply_chat_template(conversation, return_tensors="pt").to(model.device)
-    
+
 #     out_ids = model.generate(
 #         input_ids=input_ids,
 #         max_new_tokens=768,
@@ -250,7 +449,7 @@ if __name__ == "__main__":
 #         repetition_penalty=1.05,
 #     )
 #     assistant = tokenizer.batch_decode(out_ids[:, input_ids.size(1): ], skip_special_tokens=True)[0].strip()
-#     print("Assistant: ", assistant) 
+#     print("Assistant: ", assistant)
 #     conversation.append({"role": "assistant", "content": assistant })
 
 

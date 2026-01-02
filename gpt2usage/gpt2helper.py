@@ -43,7 +43,7 @@ def choose_from_top(probs, n=5):
 
 
 class JokesDataset(Dataset):
-    def __init__(self, jokes_dataset_path='/home/dunp/Downloads/archive/'):
+    def __init__(self, jokes_dataset_path=''):
         super().__init__()
 
         short_jokes_path = os.path.join(jokes_dataset_path, 'shortjokes.csv')
@@ -172,11 +172,14 @@ def gpt2_predict_test(model, tokenizer, model_epoch_name="gpt2_medium_joker_4.pt
     jokes_output_file_path = f'generated_{model_epoch_name}.jokes'
     if os.path.exists(jokes_output_file_path):
         os.remove(jokes_output_file_path)
+        
+    print("jokes_output_file_path")
+    print(jokes_output_file_path)
 
     joke_num = 0
     with torch.no_grad():
 
-        for joke_idx in range(1000):
+        for joke_idx in range(2):
 
             joke_finished = False
 
@@ -208,6 +211,9 @@ def gpt2_predict_test(model, tokenizer, model_epoch_name="gpt2_medium_joker_4.pt
 
                 output_list = list(cur_ids.squeeze().to('cpu').numpy())
                 output_text = tokenizer.decode(output_list)
+                
+                print(f"output_text: {joke_idx} ")
+                print(output_text)
 
                 with open(jokes_output_file_path, 'a') as f:
                     f.write(f"{output_text} \n\n")

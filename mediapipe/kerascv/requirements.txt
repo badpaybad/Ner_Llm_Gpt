@@ -1,0 +1,8 @@
+# This set of versions is known to be stable and compatible.
+# TensorFlow 2.15.0 uses the Keras 2 API internally, which resolves the '__internal__' attribute error.
+# Keras-CV 0.8.2 is compatible with TensorFlow 2.15.
+tensorflow==2.15.0
+keras-cv==0.8.2
+opencv-python-headless
+pycocotools
+tensorflow-datasets
