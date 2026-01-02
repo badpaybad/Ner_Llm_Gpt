@@ -62,5 +62,7 @@
         "typeinfo": "cpp",
         "numeric": "cpp",
         "fstream": "cpp"
-    },    
+    },
+    "ros.distro": "noetic",
+    
 }
