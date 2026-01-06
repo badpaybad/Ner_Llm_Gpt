@@ -24,11 +24,31 @@ convert others format to coco format, then use mediapipe to train
 # pip install
 
 
+sudo apt update
+sudo apt install -y software-properties-common
+sudo add-apt-repository ppa:deadsnakes/ppa
+
+sudo apt install python3.10-venv
+
+sudo apt install -y python3.10 python3.10-venv python3.10-dev python3.10-distutils
 
 deactivate
 rm -rf venv
 python3.10 -m venv venv
+
+            #### neus ko duoc python3.10 -m venv venv --without-pip
+            # Tải script cài đặt
+            curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+
+            # Chạy script bằng Python TRONG VENV (quan trọng)
+            /work/Ner_Llm_Gpt/mediapipe/venv/bin/python3.10 get-pip.py
+
+            /work/Ner_Llm_Gpt/mediapipe/venv/bin/python3.10 -m pip --version
+
 source venv/bin/activate
+
+curl -sS https://bootstrap.pypa.io/get-pip.py | sudo python3.10
+
 pip install --upgrade pip setuptools wheel
 pip install tensorflow==2.13.1
 pip install mediapipe==0.10.9 mediapipe-model-maker==0.2.1.4
@@ -42,6 +62,11 @@ download zip
 
                 https://l.facebook.com/l.php?u=https%3A%2F%2Fdrive.google.com%2Ffile%2Fd%2F1QZ2q9aSIln5rUo8EFvy_VIn_VdmmFqMy%2Fview%3Fusp%3Ddrive_link%26fbclid%3DIwZXh0bgNhZW0CMTAAAR2FZc7gUEZxAcx3V1vw9yD-ie13yC-xYeiCkEQyHBLfuXs8gf0YT2uOy4U_aem_Ae5i9JOjOnptid_ZB3X8KGc8ZEn0CIx1D9JVuQt06IWuQVdvmuUQYNZudsx6zi03PThO73gcpY2_I28P_iCMzZeN&h=AT1Jirw8TCylk4OE04A9IUiVbRqbmujG4rj_v6KBfg0Gn80fdcrKBjoIBziySTz1-BB0EcIOrHuWjCYxz72f7L6okrim0alkxhH9D7iQUsxuPaIwkV8WEDrXDZhyonwjCdP9La6SqQs
 
+<<<<<<< HEAD
+=======
+                or
+
+>>>>>>> 7665fae7c278cf10a65f79158fe979b6d3dad3ad
                 https://drive.google.com/file/d/1yE-bWnkhgz720B1tbOjraTbhqCR2AZdN/view?usp=sharing
 
 extract
@@ -71,7 +96,12 @@ extract
 
 after train done: model will save to : /work/llm/Ner_Llm_Gpt/mediapipe/exported_model
 
+<<<<<<< HEAD
 https://drive.google.com/file/d/11a_D5CycKh_ThB9EsDTpYgAMr7-2RL1i/view?usp=sharing 
+=======
+if want try , this is trained 
+https://drive.google.com/file/d/11a_D5CycKh_ThB9EsDTpYgAMr7-2RL1i/view?usp=sharing
+>>>>>>> 7665fae7c278cf10a65f79158fe979b6d3dad3ad
 
                 python inference.py
 
