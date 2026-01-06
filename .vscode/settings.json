@@ -59,5 +59,25 @@
         "fstream": "cpp"
     },
     "cmake.configureOnOpen": false,
+    "workbench.colorCustomizations": {
+      "activityBar.activeBackground": "#575ab7",
+      "activityBar.background": "#575ab7",
+      "activityBar.foreground": "#e7e7e7",
+      "activityBar.inactiveForeground": "#e7e7e799",
+      "activityBarBadge.background": "#592628",
+      "activityBarBadge.foreground": "#e7e7e7",
+      "commandCenter.border": "#e7e7e799",
+      "sash.hoverBorder": "#575ab7",
+      "statusBar.background": "#424499",
+      "statusBar.foreground": "#e7e7e7",
+      "statusBarItem.hoverBackground": "#575ab7",
+      "statusBarItem.remoteBackground": "#424499",
+      "statusBarItem.remoteForeground": "#e7e7e7",
+      "titleBar.activeBackground": "#424499",
+      "titleBar.activeForeground": "#e7e7e7",
+      "titleBar.inactiveBackground": "#42449999",
+      "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.color": "#424499",
     
 }

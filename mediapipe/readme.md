@@ -42,6 +42,8 @@ download zip
 
                 https://l.facebook.com/l.php?u=https%3A%2F%2Fdrive.google.com%2Ffile%2Fd%2F1QZ2q9aSIln5rUo8EFvy_VIn_VdmmFqMy%2Fview%3Fusp%3Ddrive_link%26fbclid%3DIwZXh0bgNhZW0CMTAAAR2FZc7gUEZxAcx3V1vw9yD-ie13yC-xYeiCkEQyHBLfuXs8gf0YT2uOy4U_aem_Ae5i9JOjOnptid_ZB3X8KGc8ZEn0CIx1D9JVuQt06IWuQVdvmuUQYNZudsx6zi03PThO73gcpY2_I28P_iCMzZeN&h=AT1Jirw8TCylk4OE04A9IUiVbRqbmujG4rj_v6KBfg0Gn80fdcrKBjoIBziySTz1-BB0EcIOrHuWjCYxz72f7L6okrim0alkxhH9D7iQUsxuPaIwkV8WEDrXDZhyonwjCdP9La6SqQs
 
+                https://drive.google.com/file/d/1yE-bWnkhgz720B1tbOjraTbhqCR2AZdN/view?usp=sharing
+
 extract
 
                 /work/llm/Ner_Llm_Gpt/mediapipe/train-val
@@ -68,6 +70,8 @@ extract
                 python train.py
 
 after train done: model will save to : /work/llm/Ner_Llm_Gpt/mediapipe/exported_model
+
+https://drive.google.com/file/d/11a_D5CycKh_ThB9EsDTpYgAMr7-2RL1i/view?usp=sharing 
 
                 python inference.py
 
